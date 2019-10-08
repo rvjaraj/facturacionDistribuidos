@@ -1,0 +1,27 @@
+body{
+    width: 100%; height: 100%;
+    background-image: url(img/fondo.jpg) ;
+    background-size: 100% auto;
+}
+
+div{
+    width: max-content; height: 100%;
+    border: 10px double black;
+    margin: 0 auto;
+    background-color: cornflowerblue;
+}
+
+legend{
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 200%;
+    text-align: center;
+    color:lawngreen;
+}
+
+.txt{
+    width:  380px !important;
+}
+
+input{
+    font-size: 15px;
+}
