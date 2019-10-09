@@ -13,6 +13,9 @@ mysql = MySQL(app)
 def Index():
     return render_template("principal.html")
 
+@app.route("/vistaCliente")
+def vistaCliente():
+    return render_template("vistaCliente.html")
 
 if __name__ == '__main__':
     app.debug = True
