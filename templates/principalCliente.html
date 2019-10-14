@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>FLASK CRUD</title>
+    <!-----Vinculación de archivo css bootstrap 4 ------>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/css/bootstrap.css')}}">
+</head>
+
+<body>
+
+    <!-- NAVIGATION  -->
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">REGRESAR AL INICIO</a>
+    </nav>
+
+    <div class="container pt-5">
+        {% block body %} {% endblock %}
+    </div>
+
+
+    <!-----Vinculación de archivos javascript bootstrap 4 ------>
+    <script src="{{url_for('static', filename='js/js/jquery-3.3.1.slim.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/js/popper.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/js/bootstrap.js')}}"></script>
+
+    <!-- jQuery library -->
+    <script src="{{url_for('static', filename='js/js/jquery-1.11.2.js')}}"></script>
+
+    <script type="text/javascript" src="{{url_for('static', filename='js/validaciones.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='js/consultas.js')}}"></script>
+
+</body>
+
+</html>

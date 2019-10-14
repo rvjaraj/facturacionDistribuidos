@@ -1,0 +1,67 @@
+{% extends "principalCliente.html" %} {% block body %}
+
+<div class="row">
+    <div class="col-md-4 offset-md-4">
+        <div class="card card-body">
+            <form id="formulario01" method="POST" action="/actualizar/{{usr.0}}">
+                <h5 class="card-title bg-white">EDICION DE USUARIOS</h5>
+                <div class="form-group">
+                    <input class="form-control" type="text" id="cedula" name="cedula" value="{{usr.1}}" placeholder="Cedula" onkeydown="return soloNumeros(event, this.value)" onkeyup="validarCedula(event)">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" id="nombres" name="nombres" value="{{usr.2}}" placeholder="Nombres" onkeypress="return soloLetras(event)" onkeyup="dosNombres(this.value, 'chNombre')" />
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" id="apellidos" name="apellidos" value="{{usr.3}}" placeholder="Apellidos" onkeydown="return soloLetras(event)" onkeyup="dosNombres(this.value, 'chApellido')" />
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" id="direccion" name="direccion" value="{{usr.4}}" placeholder="Dirección" onkeyup="valDir(this.value, 'chDireccion')" />
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" id="telefono" name="telefono" value="{{usr.5}}" placeholder="Teléfono" onkeydown="return soloNumeros(event, this.value)" onkeyup="telefonoVal(this.value, 'chTelefono')">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" id="correo" name="correo" value="{{usr.7}}" placeholder="Correo" onkeyup=" validarCorreo(this.value, 'chCorreo' ) " />
+                </div>
+                <div class="form-group ">
+                    <input class="form-control" type="password" id="contrasena" name="contrasena" value="{{usr.8}}" placeholder="Contraseña" onkeyup=" validarContra(this.value, 'chContrasena' ) " />
+                </div>
+                <div class="form-group">
+                    <select class="form-control" id="rol" name="rol">
+                        <option value="SELECCIONE ROL">SELECCIONE ROL</option>
+                        {% if usr.6 == 'ADMINISTRADOR' %}
+                        <option value="ADMINISTRADOR" selected>ADMINISTRADOR</option>
+                        {% else %}
+                        <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+                        {% endif %}
+
+                        {% if usr.6 == 'EMPLEADO' %}
+                        <option value="EMPLEADO" selected>EMPLEADO</option>
+                        {% else %}
+                        <option value="EMPLEADO">EMPLEADO</option>
+                        {% endif %}
+
+                        {% if usr.6 == 'USUARIO' %}
+                        <option value="USUARIO" selected>USUARIO</option>
+                        {% else %}
+                        <option value="USUARIO">USUARIO</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        ACTUALIZAR
+                    </button>
+                </div>
+                <div class="form-group">
+                    <button type="reset" class="btn btn-danger btn-block" onclick="window.location.href='/vistaCliente'">
+                        CANCELAR
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
