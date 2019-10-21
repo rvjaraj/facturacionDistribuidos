@@ -11,29 +11,25 @@
             </button>
             </div>
             {% endfor %} {% endif %} {% endwith %}
-            <form method="POST" action="/addUsuario" onsubmit=" return  validarIngresoCliente()">
-                <h5 class="card-title bg-white">CREACION DE USUARIOS</h5>
+            <form method="POST" action="/addUsuario" onsubmit=" return  validarIngresoProducto()">
+                <h5 class="card-title bg-white">CREACION DE PRODUCTOS</h5>
                 <div class="form-group">
-                    <input class="form-control" type="text" id="cedula" name="cedula" value="" placeholder="Cedula" onkeydown="return soloNumeros(event, this)" onkeyup="validarCedula(this)">
+                    <input class="form-control" type="text" id="codigo" name="codigo" value="" placeholder="Codigo" onkeyup="validarLetras(this)" />
                 </div>
                 <div class="form-group">
-                    <input class="form-control" type="text" id="nombres" name="nombres" value="" placeholder="Nombres" onkeypress="return soloLetras(event)" onkeyup="validarLetras(this)" />
+                    <input class="form-control" type="text" id="nombre" name="nombre" value="" placeholder="Nombre" onkeypress="return soloLetras(event)" onkeyup="validarLetras(this)" />
                 </div>
                 <div class="form-group">
-                    <input class="form-control" type="text" id="apellidos" name="apellidos" value="" placeholder="Apellidos" onkeydown="return soloLetras(event)" onkeyup="validarLetras(this)" />
+                    <input class="form-control" type="number" step="0.01" id="precio" name="precio" value="" placeholder="Precio" onkeydown="return soloNumeros(event, this)" />
                 </div>
                 <div class="form-group">
-                    <input class="form-control" type="text" id="direccion" name="direccion" value="" placeholder="Dirección" onkeyup="validarLetras(this)" />
+                    <input class="form-control" type="number" id="stock" name="stock" value="" placeholder="Stock" nkeydown="return soloNumeros(event, this)" onkeyup=" return validarCantidad(this,1)" />
                 </div>
+
                 <div class="form-group">
-                    <input class="form-control" type="text" id="telefono" name="telefono" value="" placeholder="Teléfono" onkeydown="return soloNumeros(event, this)" onkeyup=" return validarCantidad(this,10)" />
+                    <input class="form-control" type="number" step="0.01" id="descuento" name="descuento" value="" placeholder="Descuento" onkeydown="return soloNumeros(event, this)" />
                 </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" id="correo" name="correo" value="" placeholder="Correo" onkeyup=" validarCorreo(this) " />
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="date" name="fechaNac" id="fechaNac" placeholder="Ingrese su fecha de nacimiento" onchange="validarFecha(this)">
-                </div>
+
                 <button class=" btn btn-primary btn-block ">
                     GUARDAR
                 </button>

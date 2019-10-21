@@ -4,32 +4,31 @@ db = pymysql.connect("localhost", "root", "", "facturaciondistribuidos")
 
 
 class Usuario:
-    def __init__(self, id, cedula, nombre, apellido, telefono, direccion, rol, correo, contrasenia, eliminado):
+    def __init__(self, id, cedula, nombre, apellido, telefono, direccion, correo, fechaNac, eliminado):
         self.id = id
         self.cedula = cedula
         self.nombre = nombre
         self.apellido = apellido
         self.telefono = telefono
         self.direccion = direccion
-        self.rol = rol
         self.correo = correo
-        self.contrasenia = contrasenia
+        self.fechaNac = fechaNac
         self.eliminado = eliminado
 
     def Imprimir(self):
         mensaje = ('Usuarios: \n id = ' + str(self.id) + '\n cedula = ' + self.cedula + '\n nombre = ' + self.nombre + '\n apellido = ' + self.apellido
-                   + '\n telefono = ' + self.telefono + '\n direccion = ' + self.direccion + '\n rol = ' + self.rol + '\n correo = ' + self.correo)
+                   + '\n telefono = ' + self.telefono + '\n direccion = ' + self.direccion + '\n rol = ' + self.fechaNac + '\n correo = ' + self.correo)
         return (mensaje)
 
 
-class Controlador:
+class ControladorUsuario:
 
     def ingresar(self, Usuario):
         try:
             usr = Usuario
             cur = db.cursor()
-            cur.execute('INSERT INTO usuarios (cedula, nombre, apellido, telefono, direccion, rol, correo, contrasenia, eliminado) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)',
-                        (usr.cedula, usr.nombre, usr.apellido, usr.telefono, usr.direccion, usr.rol, usr.correo, usr.contrasenia, usr.eliminado))
+            cur.execute('INSERT INTO usuarios (cedula, nombre, apellido, telefono, direccion, correo, fechaNacimiento, eliminado) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',
+                        (usr.cedula, usr.nombre, usr.apellido, usr.telefono, usr.direccion, usr.correo, usr.fechaNac, usr.eliminado))
             db.commit()
             cur.close()
             return True
@@ -48,17 +47,16 @@ class Controlador:
                     apellido = %s,
                     telefono = %s,
                     direccion = %s,
-                    rol = %s,
                     correo = %s,
-                    contrasenia = %s,
+                    fechaNacimiento = %s,
                     eliminado = %s
                 WHERE id = %s
-            """, (usr.cedula, usr.nombre, usr.apellido, usr.telefono, usr.direccion, usr.rol, usr.correo, usr.contrasenia, usr.eliminado, usr.id))
+            """, (usr.cedula, usr.nombre, usr.apellido, usr.telefono, usr.direccion, usr.correo, usr.fechaNac, usr.eliminado, usr.id))
             db.commit()
             cur.close()
             return True
         except Exception as e:
-            print(str(e) +" eroror ")
+            print(str(e) +" eroror aaaaaaaaaaaaaaaaaaaaa")
             return False   
 
     def listar(self):
@@ -70,7 +68,7 @@ class Controlador:
     
     def listarBusca(self, cedula):
         cur = db.cursor()
-        cur.execute("SELECT * FROM usuarios WHERE eliminado <> 1 and cedula like %s", ('%'+cedula+'%'))
+        cur.execute("SELECT * FROM usuarios WHERE eliminado <> 1 and cedula like %s  or eliminado <> 1 and nombre like %s  or eliminado <> 1 and apellido like %s", ('%'+cedula+'%', '%'+cedula+'%', '%'+cedula+'%')  )
         data = cur.fetchall()
         cur.close()
         return data
@@ -90,7 +88,7 @@ class Controlador:
 
     def buscarUsuario(self, id):
         cur = db.cursor()
-        cur.execute('SELECT * FROM usuarios WHERE id = %s', (id))
+        cur.execute('SELECT * FROM usuarios WHERE eliminado <> 1 and id = %s', (id))
         data = cur.fetchall()
         cur.close()
         return data[0]
@@ -98,8 +96,8 @@ class Controlador:
 
 if __name__ == "__main__":
     usr = Usuario(0, "cedula", "nombre", "apellido", 'telefono',
-                  "direccion", "rol", "correo", 'contrasenia', False)
+                  "direccion",  "correo", '10/10/1000', False)
     print(usr.Imprimir())
 
-    con = Controlador()
+    con = ControladorUsuario()
     con.listar()

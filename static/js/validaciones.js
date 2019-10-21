@@ -50,18 +50,6 @@ function validarCantidad(element, cant) {
     }
 }
 
-function validarSeleccion(element) {
-    txt = ($('#' + element.id + ' option:selected').text())
-    if (txt != "SELECCIONE ROL") {
-        $('#' + element.id).removeClass('is-invalid');
-        $('#' + element.id).addClass('is-valid');
-    } else {
-        $('#' + element.id).addClass('is-valid');
-        $('#' + element.id).addClass('is-invalid');
-    }
-
-}
-
 function soloNumeros(event, element) {
     if (event.shiftKey)
         return false
@@ -104,6 +92,21 @@ function soloLetras(e) {
     }
 }
 
+function validarFecha(element) {
+    hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    fecha = $("#" + element.id).val()
+
+    if ((new Date(fecha).getTime() < new Date(hoy).getTime())) {
+        $('#' + element.id).removeClass('is-invalid');
+        $('#' + element.id).addClass('is-valid');
+    } else {
+        $('#' + element.id).removeClass('is-valid');
+        $('#' + element.id).addClass('is-invalid');
+    }
+}
+
 
 function validarCorreo(element) {
     txt = $('#' + element.id).val()
@@ -129,53 +132,48 @@ function validarCorreo(element) {
 
 function validarIngresoCliente() {
     cont = 0;
-    if ($("#rol").hasClass("is-valid")) {
+    if ($("#fechaNac").hasClass("is-valid")) {
         cont++ //1
     } else {
-        errorMensaje("SELECCIONE UN ROL")
+        errorMensaje("SELECCIONE UN FECHA VALIDA")
     }
 
-    if ($("#contrasena").hasClass("is-valid")) {
-        cont++ //2
-    } else {
-        errorMensaje("CONTRASEÑA INCORRECTO")
-    }
     if ($("#correo").hasClass("is-valid")) {
-        cont++ //3
+        cont++ //2
     } else {
         errorMensaje("CORREO INCORRECTO")
     }
 
     if ($("#telefono").hasClass("is-valid")) {
-        cont++ //4
+        cont++ //3
     } else {
         errorMensaje("TELEFONO INCORRECTO")
     }
 
     if ($("#direccion").hasClass("is-valid")) {
-        cont++ //5
+        cont++ //4
     } else {
         errorMensaje("DIRECCION INCORRECTO")
     }
 
     if ($("#apellidos").hasClass("is-valid")) {
-        cont++ //6
+        cont++ //5
     } else {
         errorMensaje("APELLIDO INCORRECTO")
     }
 
     if ($("#nombres").hasClass("is-valid")) {
-        cont++ //7
+        cont++ //6
     } else {
         errorMensaje("NOMBRE INCORRECTO")
     }
 
     if ($("#cedula").hasClass("is-valid")) {
-        cont++ //8
+        cont++ //7
     } else {
         errorMensaje("CEDULA INCORRECTA")
     }
-    if (cont == 8)
+    if (cont == 7)
         return true
     else
         return false
@@ -187,4 +185,64 @@ function errorMensaje(menseje) {
         "<span aria-hidden='true'>&times;</span>" +
         "</button></div>"
     $("#alertError").html(html);
+}
+
+function validarEditarCliente() {
+    cont = 0;
+    if ($("#fechaNacE").hasClass("is-valid")) {
+        cont++ //1
+    } else {
+        errorMensajeE("SELECCIONE UN FECHA VALIDA")
+    }
+
+    if ($("#correoE").hasClass("is-valid")) {
+        cont++ //2
+    } else {
+        errorMensajeE("CORREO INCORRECTO")
+    }
+
+    if ($("#telefonoE").hasClass("is-valid")) {
+        cont++ //3
+    } else {
+        errorMensajeE("TELEFONO INCORRECTO")
+    }
+
+    if ($("#direccionE").hasClass("is-valid")) {
+        cont++ //4
+    } else {
+        errorMensajeE("DIRECCION INCORRECTO")
+    }
+
+    if ($("#apellidosE").hasClass("is-valid")) {
+        cont++ //5
+    } else {
+        errorMensajeE("APELLIDO INCORRECTO")
+    }
+
+    if ($("#nombresE").hasClass("is-valid")) {
+        cont++ //6
+    } else {
+        errorMensajeE("NOMBRE INCORRECTO")
+    }
+
+    if ($("#cedulaE").hasClass("is-valid")) {
+        cont++ //7
+    } else {
+        errorMensajeE("CEDULA INCORRECTA")
+    }
+    if (cont == 7) {
+        acturalizarCliente()
+        return true
+    } else {
+        return false
+    }
+
+}
+
+function errorMensajeE(menseje) {
+    html = "<br><div id='alertError' class='alert alert-danger alert-dismissible fade show' role='alert'>" +
+        menseje + "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>" +
+        "<span aria-hidden='true'>&times;</span>" +
+        "</button></div>"
+    $("#alertErrorE").html(html);
 }

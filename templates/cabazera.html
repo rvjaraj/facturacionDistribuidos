@@ -6,9 +6,13 @@
     <title>FLASK CRUD</title>
     <!-----Vinculación de archivo css bootstrap 4 ------>
     <link rel="stylesheet" href="{{url_for('static', filename='css/css/bootstrap.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/css/toast.css')}}">
 </head>
 
-<body>
+<body style="background: #4CA1AF;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #C4E0E5, #4CA1AF);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #C4E0E5, #4CA1AF); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        ">
 
     <!-- NAVIGATION  -->
     <nav class="navbar navbar-dark bg-dark">
@@ -20,16 +24,23 @@
     </div>
 
 
+
+
     <!-----Vinculación de archivos javascript bootstrap 4 ------>
     <script src="{{url_for('static', filename='js/js/jquery-3.3.1.slim.min.js')}}"></script>
-    <script src="{{url_for('static', filename='js/js/popper.min.js')}}"></script>
-    <script src="{{url_for('static', filename='js/js/bootstrap.js')}}"></script>
 
     <!-- jQuery library -->
     <script src="{{url_for('static', filename='js/js/jquery-1.11.2.js')}}"></script>
 
+    <script src="{{url_for('static', filename='js/js/popper.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/js/bootstrap.js')}}"></script>
+
+
+
     <script type="text/javascript" src="{{url_for('static', filename='js/validaciones.js')}}"></script>
     <script type="text/javascript" src="{{url_for('static', filename='js/consultas.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='js/js/toast.js')}}"></script>
+
 
 </body>
 

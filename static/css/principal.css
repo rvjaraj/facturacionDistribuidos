@@ -28,19 +28,6 @@ body {
     box-shadow: 20px -5px 30px rgba(0, 0, 0, 0.4);
 }
 
-.content1 {
-    position: absolute;
-    right: -40px;
-    top: 20px;
-    width: 350px;
-    height: 300px;
-    background-image: url("img/clientes.png");
-    border-radius: 50%;
-    text-align: center;
-    transform: perspective(800px) translateZ(20px);
-    box-shadow: 10px -5px 20px rgba(0, 0, 0, 0.2);
-}
-
 div.btn-wrapper {
     position: absolute;
     top: 50px;
@@ -138,6 +125,45 @@ div.cube.show-success .fail {
     width: 180px;
     height: 90px;
     transform: rotateX(-90deg) translateZ(45px);
+}
+
+.content1 {
+    position: absolute;
+    right: -40px;
+    top: 20px;
+    width: 350px;
+    height: 300px;
+    background-image: url("img/clientes.png");
+    border-radius: 50%;
+    text-align: center;
+    transform: perspective(800px) translateZ(20px);
+    box-shadow: 10px -5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.content2 {
+    position: absolute;
+    right: -40px;
+    top: 20px;
+    width: 350px;
+    height: 300px;
+    background-image: url("img/produtos.png");
+    border-radius: 50%;
+    text-align: center;
+    transform: perspective(800px) translateZ(20px);
+    box-shadow: 10px -5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.content3 {
+    position: absolute;
+    right: -40px;
+    top: 20px;
+    width: 350px;
+    height: 300px;
+    background-image: url("img/factura.png");
+    border-radius: 50%;
+    text-align: center;
+    transform: perspective(800px) translateZ(20px);
+    box-shadow: 10px -5px 20px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes press {
