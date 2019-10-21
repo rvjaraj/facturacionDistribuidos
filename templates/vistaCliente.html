@@ -74,7 +74,7 @@
                 </thead>
                 <tbody id='filas'>
                     {% for usr in usuaarios %}
-                    <tr>
+                    <t-r>
                         <td>{{usr.1}} </td>
                         <td>{{usr.2}}</td>
                         <td>{{usr.3}}</td>
@@ -84,10 +84,10 @@
                         <td>{{usr.7}}</td>
                         <td>
                             <a class="btn btn-secondary" data-toggle="modal" onclick="cargarDatosCLiente('{{usr.0}}')" data-target="#exampleModalLong">EDITAR</a>
-                            <a href="/eliminar/{{usr.0}} " onclick="confirmarEliminacion('USUARIO',event)" class=" btn btn-danger btn-delete ">ELIMINAR</a>
+                            <a href="/eliminar/{{usr.0}}" onclick="confirmarEliminacion('USUARIO',event)" class="btn btn-danger btn-delete">ELIMINAR</a>
                         </td>
-                    </tr>
-                    {% endfor %}
+                        </tr>
+                        {% endfor %}
                 </tbody>
             </table>
         </div>

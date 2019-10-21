@@ -62,12 +62,12 @@ class ControladorProducto:
         cur.close()
         return data
 
-    def listarBusca(self, nombre):
+    def listarBusca(self, cedula):
         cur = db.cursor()
-        cur.execute(
-            "SELECT * FROM producto WHERE eliminado <> 1 and nombre like %s", ('%'+nombre+'%'))
+        cur.execute("SELECT * FROM producto WHERE eliminado <> 1 and id =  %s  or eliminado <> 1 and nombre like %s  or eliminado <> 1 and codigo like %s", (cedula, '%'+cedula+'%', '%'+cedula+'%')  )
         data = cur.fetchall()
         cur.close()
+        
         return data
 
     def eliminar(self, id):
@@ -96,4 +96,4 @@ if __name__ == "__main__":
     print(pro.Imprimir())
 
     con = ControladorProducto()
-    con.listar()
+    

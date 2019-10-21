@@ -11,7 +11,7 @@
             </button>
             </div>
             {% endfor %} {% endif %} {% endwith %}
-            <form method="POST" action="/addUsuario" onsubmit=" return  validarIngresoProducto()">
+            <form method="POST" action="/addProducto" onsubmit=" return  validarIngresoProducto()">
                 <h5 class="card-title bg-white">CREACION DE PRODUCTOS</h5>
                 <div class="form-group">
                     <input class="form-control" type="text" id="codigo" name="codigo" value="" placeholder="Codigo" onkeyup="validarLetras(this)" />
@@ -20,14 +20,14 @@
                     <input class="form-control" type="text" id="nombre" name="nombre" value="" placeholder="Nombre" onkeypress="return soloLetras(event)" onkeyup="validarLetras(this)" />
                 </div>
                 <div class="form-group">
-                    <input class="form-control" type="number" step="0.01" id="precio" name="precio" value="" placeholder="Precio" onkeydown="return soloNumeros(event, this)" />
+                    <input class="form-control" type="number" step="0.01" id="precio" name="precio" value="" placeholder="Precio" onkeydown="return soloDecimales(event, this)" onkeyup="validarDecimales(this)" />
                 </div>
                 <div class="form-group">
-                    <input class="form-control" type="number" id="stock" name="stock" value="" placeholder="Stock" nkeydown="return soloNumeros(event, this)" onkeyup=" return validarCantidad(this,1)" />
+                    <input class="form-control" type="number" id="stock" name="stock" value="" placeholder="Stock" onkeydown="return soloNumeros(event, this)" onkeyup=" return validarStock(this,1)" />
                 </div>
 
                 <div class="form-group">
-                    <input class="form-control" type="number" step="0.01" id="descuento" name="descuento" value="" placeholder="Descuento" onkeydown="return soloNumeros(event, this)" />
+                    <input class="form-control" type="number" step="0.01" id="descuento" name="descuento" value="" placeholder="Descuento" onkeydown="return soloDecimales(event, this)" onkeyup="validarDecimales(this)" />
                 </div>
 
                 <button class=" btn btn-primary btn-block ">
@@ -43,13 +43,13 @@
 
     <div class="col-md-9">
 
-        <div class="card card-body" style="margin-right: -50%;">
+        <div class="card card-body" style="margin-right: -30%;">
             <div class="active-pink-3 active-pink-4 mb-4">
                 <table>
                     <thead>
                         <tr>
-                            <th style="width: 100%"><input name="buscar" id='buscar' onkeyup="cargarBusqueda()" class="form-control" type="text" placeholder="Buscar, Ingresar Cedula, Nombre o Apellido" aria-label="Buscar, Ingresar Cedula"></th>
-                            <th><button type="button" class="btn btn-outline-danger" onclick="window.location.href='/vistaCliente'">X</button></th>
+                            <th style="width: 100%"><input name="buscar" id='buscarProducto' onkeyup="cargarBusquedaProducto()" class="form-control" type="text" placeholder="Buscar, Ingresar Id, Codigo o Nombre" aria-label="Buscar, Ingresar Cedula"></th>
+                            <th><button type="button" class="btn btn-outline-danger" onclick="window.location.href='/vistaProductos'">X</button></th>
                         </tr>
                     </thead>
                 </table>
@@ -58,29 +58,27 @@
                 <thead>
                     <tr>
 
-                        <td>Cedula</td>
-                        <td>Nombres</td>
-                        <td>Apellidos</td>
-                        <td>Teléfono</td>
-                        <td>Dirección</td>
-                        <td>Correo electrónico</td>
-                        <td>Fecha de Nacimiento</td>
-                        <td>Opciones</td>
+                        <td>ID</td>
+                        <td>CODIGO</td>
+                        <td>NOMBRE</td>
+                        <td>PRECIO</td>
+                        <td>STOCK</td>
+                        <td>DESCUENTO</td>
+                        <td>OPCIONES</td>
                     </tr>
                 </thead>
                 <tbody id='filas'>
-                    {% for usr in usuaarios %}
+                    {% for pro in productos %}
                     <tr>
-                        <td>{{usr.1}} </td>
-                        <td>{{usr.2}}</td>
-                        <td>{{usr.3}}</td>
-                        <td>{{usr.4}}</td>
-                        <td>{{usr.5}}</td>
-                        <td>{{usr.6}}</td>
-                        <td>{{usr.7}}</td>
+                        <td>{{pro.0}} </td>
+                        <td>{{pro.4}}</td>
+                        <td>{{pro.1}}</td>
+                        <td>{{pro.2}}</td>
+                        <td>{{pro.3}}</td>
+                        <td>{{pro.5}}</td>
                         <td>
-                            <a class="btn btn-secondary" data-toggle="modal" onclick="cargarDatosCLiente('{{usr.0}}')" data-target="#exampleModalLong">EDITAR</a>
-                            <a href="/eliminar/{{usr.0}} " onclick="confirmarEliminacion('USUARIO',event)" class=" btn btn-danger btn-delete ">ELIMINAR</a>
+                            <a class="btn btn-secondary" data-toggle="modal" onclick="cargarDatosProductos('{{pro.0}}')" data-target="#exampleModalLong">EDITAR</a>
+                            <a href="/eliminarProducto/{{pro.0}} " onclick="confirmarEliminacion('PRODUCTO',event)" class=" btn btn-danger btn-delete ">ELIMINAR</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -102,36 +100,33 @@
             <div class="modal-body" name="modal">
                 <div class="row">
                     <div class="card card-body">
-                        <form id="formularioEditar" method="POST" action="/actualizar">
+                        <form method="POST" action="/actualizarProducto" onsubmit=" return  validarEditarProducto()">
+                            <h5 class="card-title bg-white">CREACION DE PRODUCTOS</h5>
                             <div class="form-group">
                                 <input class="form-control" type="text" id="idE" name="idE" value="" hidden>
                             </div>
 
                             <div class="form-group">
-                                <input class="form-control" type="text" id="cedulaE" name="cedulaE" value="" placeholder="Cedula" onkeydown="return soloNumeros(event, this)" onkeyup="validarCedula(this)">
+                                <input class="form-control" type="text" id="codigoE" name="codigoE" value="" placeholder="Codigo" onkeyup="validarLetras(this)" />
                             </div>
                             <div class="form-group">
-                                <input class="form-control" type="text" id="nombresE" name="nombresE" value="" placeholder="Nombres" onkeypress="return soloLetras(event)" onkeyup="validarLetras(this)" />
+                                <input class="form-control" type="text" id="nombreE" name="nombreE" value="" placeholder="Nombre" onkeypress="return soloLetras(event)" onkeyup="validarLetras(this)" />
                             </div>
                             <div class="form-group">
-                                <input class="form-control" type="text" id="apellidosE" name="apellidosE" value="" placeholder="Apellidos" onkeypress="return soloLetras(event)" onkeyup="validarLetras(this)" />
+                                <input class="form-control" type="number" step="0.01" id="precioE" name="precioE" value="" placeholder="Precio" onkeydown="return soloDecimales(event, this)" onkeyup="validarDecimales(this)" />
                             </div>
                             <div class="form-group">
-                                <input class="form-control" type="text" id="direccionE" name="direccionE" value="" placeholder="Dirección" onkeyup="validarLetras(this)" />
+                                <input class="form-control" type="number" id="stockE" name="stockE" value="" placeholder="StockE" onkeydown="return soloNumeros(event, this)" onkeyup=" return validarStock(this,1)" />
                             </div>
+
                             <div class="form-group">
-                                <input class="form-control" type="text" id="telefonoE" name="telefonoE" value="" placeholder="Teléfono" onkeydown="return soloNumeros(event, this)" onkeyup=" return validarCantidad(this,10)" />
-                            </div>
-                            <div class="form-group">
-                                <input class="form-control" type="text" id="correoE" name="correoE" value="" placeholder="Correo" onkeyup=" validarCorreo(this) " />
-                            </div>
-                            <div class="form-group">
-                                <input class="form-control" type="date" name="fechaNacE" id="fechaNacE" placeholder="Ingrese su fecha de nacimiento" onchange="validarFecha(this)">
+                                <input class="form-control" type="number" step="0.01" id="descuentoE" name="descuentoE" value="" placeholder="Descuento" onkeydown="return soloDecimales(event, this)" onkeyup="validarDecimales(this)" />
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
-                                <button type="button" class="btn btn-primary" onclick="validarEditarCliente()">GUARDAR CAMBIOS</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
+                                <button type="submit" class="btn btn-primary">GUARDAR CAMBIOS</button>
                             </div>
+
                         </form>
                     </div>
 

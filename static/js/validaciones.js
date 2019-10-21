@@ -246,3 +246,138 @@ function errorMensajeE(menseje) {
         "</button></div>"
     $("#alertErrorE").html(html);
 }
+
+//** validaciones del producto*/
+
+function soloDecimales(event, element) {
+    txt = $('#' + element.id).val()
+
+    if (event.shiftKey)
+        return false
+    if (event.keyCode == 190 && txt != "" || event.keyCode == 110 && txt != "") {
+        if (txt.indexOf(".") > -1) {
+            return false
+        }
+        return true
+    }
+
+    if (event.keyCode != 46 && event.keyCode != 8 && event.keyCode != 37 && event.keyCode != 39)
+        if ($('#' + element.id).val().length >= 10)
+            return false
+
+    if (event.keyCode < 48 || event.keyCode > 57)
+        if (event.keyCode < 96 || event.keyCode > 105)
+            if (event.keyCode != 46 && event.keyCode != 8 && event.keyCode != 37 && event.keyCode != 39)
+                return false
+
+
+
+}
+
+function validarDecimales(element) {
+
+    txt = $('#' + element.id).val()
+    if (txt != "") {
+        var RE = /^\d*(\.\d{1})?\d{0,1}$/;
+        if (RE.test(txt)) {
+            $('#' + element.id).removeClass('is-invalid');
+            $('#' + element.id).addClass('is-valid');
+        } else {
+            $('#' + element.id).removeClass('is-valid');
+            $('#' + element.id).addClass('is-invalid');
+        }
+    } else {
+        $('#' + element.id).removeClass('is-valid');
+        $('#' + element.id).addClass('is-invalid');
+    }
+}
+
+function validarStock(element) {
+    txt = $('#' + element.id).val()
+    if (txt.length >= 1) {
+        $('#' + element.id).removeClass('is-invalid');
+        $('#' + element.id).addClass('is-valid');
+        return false
+    } else {
+        $('#' + element.id).removeClass('is-valid');
+        $('#' + element.id).addClass('is-invalid');
+    }
+}
+
+function validarIngresoProducto() {
+    cont = 0;
+    if ($("#descuento").hasClass("is-valid")) {
+        cont++ //1
+    } else {
+        errorMensaje("DESCUENTO INCORRECTO")
+    }
+
+    if ($("#stock").hasClass("is-valid")) {
+        cont++ //2
+    } else {
+        errorMensaje("STOCK INCORRECTO")
+    }
+
+    if ($("#precio").hasClass("is-valid")) {
+        cont++ //3
+    } else {
+        errorMensaje("PRECIO INCORRECTO")
+    }
+
+    if ($("#nombre").hasClass("is-valid")) {
+        cont++ //4
+    } else {
+        errorMensaje("NOMBRE INCORRECTO")
+    }
+
+    if ($("#codigo").hasClass("is-valid")) {
+        cont++ //5
+    } else {
+        errorMensaje("CODIGO INCORRECTO")
+    }
+    if (cont == 5) {
+        acturalizarCliente()
+        return true
+    } else {
+        return false
+    }
+}
+
+function validarEditarProducto() {
+    cont = 0;
+    if ($("#descuentoE").hasClass("is-valid")) {
+        cont++ //1
+    } else {
+        errorMensajeE("DESCUENTO INCORRECTO")
+    }
+
+    if ($("#stockE").hasClass("is-valid")) {
+        cont++ //2
+    } else {
+        errorMensajeE("STOCK INCORRECTO")
+    }
+
+    if ($("#precioE").hasClass("is-valid")) {
+        cont++ //3
+    } else {
+        errorMensajeE("PRECIO INCORRECTO")
+    }
+
+    if ($("#nombreE").hasClass("is-valid")) {
+        cont++ //4
+    } else {
+        errorMensajeE("NOMBRE INCORRECTO")
+    }
+
+    if ($("#codigoE").hasClass("is-valid")) {
+        cont++ //5
+    } else {
+        errorMensajeE("CODIGO INCORRECTO")
+    }
+    if (cont == 5) {
+        acturalizarCliente()
+        return true
+    } else {
+        return false
+    }
+}

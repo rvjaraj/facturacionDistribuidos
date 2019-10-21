@@ -18,6 +18,7 @@ def vistaCliente():
     data = con.listar()
     return render_template("vistaCliente.html", usuaarios=data)
 
+
 @app.route("/buscarClientes", methods=['POST'])
 def buscaClientes():
     if request.method == 'POST':
@@ -34,6 +35,7 @@ def buscaCliente():
         con = ControladorUsuario()
         data = con.buscarUsuario(id)
         return json.dumps(data)
+
 
 @app.route("/addUsuario", methods=['POST'])
 def vistaUsuario():
@@ -96,10 +98,77 @@ def actualizarUsuario():
             return json.dumps('false')
 
 
-############### productossssss    
+# productossssss
 @app.route("/vistaProductos")
-def vistaCategoria():
-    return render_template("vistaProducto.html")
+def vistaProductos():
+    con = ControladorProducto()
+    data = con.listar()
+    return render_template("vistaProducto.html", productos=data)
+
+
+@app.route("/addProducto", methods=['POST'])
+def addProducto():
+    if request.method == 'POST':
+        id = 0
+        codigo = request.form['codigo']
+        nombre = request.form['nombre']
+        precio = request.form['precio']
+        stock = request.form['stock']
+        descuento = request.form['descuento']
+        pro = Producto(id, nombre, precio, stock, codigo, descuento, "0")
+        con = ControladorProducto()
+        if(con.ingresar(pro)):
+            flash('PRODUCTO AGREGADO EXITOSAMENTE')
+        else:
+            flash('ERROR AL AGREGAR PRODUCTO')
+        return redirect(url_for('vistaProductos'))
+
+
+@app.route('/eliminarProducto/<string:id>')
+def eliminarProducto(id):
+    con = ControladorProducto()
+    if(con.eliminar(id)):
+        flash('PRODUCTO ELIMINADO EXITOSAMENTE')
+    else:
+        flash('ERROR AL ELIMINAR PRODUCTO')
+    return redirect(url_for('vistaProductos'))
+
+
+@app.route("/buscarProducto", methods=['POST'])
+def buscarProducto():
+    if request.method == 'POST':
+        txt = request.form['dat']
+        con = ControladorProducto()
+        data = con.listarBusca(txt)
+        print(data)
+        return json.dumps(data)
+
+
+@app.route("/buscarProductoId", methods=['POST'])
+def buscarProductoId():
+    if request.method == 'POST':
+        txt = request.form['id']
+        con = ControladorProducto()
+        data = con.buscarProducto(txt)
+        return json.dumps(data)
+
+
+@app.route('/actualizarProducto', methods=['POST'])
+def actualizarProducto():
+    if request.method == 'POST':
+        idd = request.form['idE']
+        codigo = request.form['codigoE']
+        nombre = request.form['nombreE']
+        precio = request.form['precioE']
+        stock = request.form['stockE']
+        descuento = request.form['descuentoE']
+        pro = Producto(idd, nombre, precio, stock, codigo, descuento, "0")
+        con = ControladorProducto()
+        if(con.actualizar(pro)):
+            flash('PRODUCTO ACTUALIZADO EXITOSAMENTE')
+        else:
+            flash('ERROR AL ACTUALIZADO PRODUCTO')
+        return redirect(url_for('vistaProductos'))
 
 
 if __name__ == '__main__':
@@ -107,5 +176,5 @@ if __name__ == '__main__':
     app.run(host='localhost', port=5001)
 
 
-#modal
-#toast
+# modal
+# toast

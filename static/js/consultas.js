@@ -19,7 +19,7 @@ function cargarBusqueda() {
                     " <td>" + res[7] + "</td>" +
                     " <td> " +
                     "<a class='btn btn-secondary' data-toggle='modal' onclick='cargarDatosCLiente(" + res[0] + ")' data-target='#exampleModalLong'>EDITAR</a>" +
-                    "<a href='/eliminar/" + res[0] + "' onclick=\"confirmarEliminacion(\"USUARIO\",event)\" class='btn btn-danger btn-delete'>ELIMINAR</a>" + "</td>" +
+                    "<a href='/eliminar/" + res[0] + "' onclick='confirmarEliminacion(\'USUARIO\',event)' >ELIMINAR</a> </td>" +
                     "</tr>"
 
             }
@@ -104,6 +104,69 @@ function acturalizarCliente() {
             } else {
 
             }
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}
+
+function cargarBusquedaProducto() {
+    var why = $('#buscarProducto').val();
+    $.ajax({
+        url: "/buscarProducto",
+        data: { 'dat': why },
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            var resul = ""
+            for (let index = 0; index < response.length; index++) {
+                const res = response[index];
+                resul = resul + "<tr> " +
+                    " <td>" + res[0] + "</td>" +
+                    " <td>" + res[4] + "</td>" +
+                    " <td>" + res[1] + "</td>" +
+                    " <td>" + res[2] + "</td>" +
+                    " <td>" + res[3] + "</td>" +
+                    " <td>" + res[5] + "</td>" +
+                    " <td> " +
+                    "<a class='btn btn-secondary' data-toggle='modal' onclick='cargarDatosProductos('" + res[0] + "')' data-target='#exampleModalLong'>EDITAR</a>" +
+                    "<a href='/eliminarProducto/" + res[0] + "' onclick=\"confirmarEliminacion(\'PRODUCTO\',event)\" class='btn btn-danger btn-delete'>ELIMINAR</a>" +
+                    "</tr>"
+            }
+
+            $("#filas").html(resul);
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}
+
+function cargarDatosProductos(id) {
+    $.ajax({
+        url: "/buscarProductoId",
+        data: { 'id': id },
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            document.getElementById('idE').value = response[0]
+
+            document.getElementById('nombreE').value = response[1]
+            $('#nombreE').addClass('is-valid');
+
+            document.getElementById('codigoE').value = response[4]
+            $('#codigoE').addClass('is-valid');
+
+            document.getElementById('precioE').value = response[2]
+            $('#precioE').addClass('is-valid');
+
+            document.getElementById('stockE').value = response[3]
+            $('#stockE').addClass('is-valid');
+
+            document.getElementById('descuentoE').value = response[5]
+            $('#descuentoE').addClass('is-valid');
+
         },
         error: function(error) {
             console.log(error);
