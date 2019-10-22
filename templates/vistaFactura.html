@@ -1,7 +1,8 @@
 {% extends "cabazera.html" %} {% block body %}
-<div class="card border-dark " style="max-width: 500rem;" style="top: -100px;">
+
+<div class="card border-dark " style="width: 115%;">
     <div class="card-header">
-        <ul class="nav nav-pills bg-dark mb-3" id="pills-tab" role="tablist">
+        <ul class="nav nav-pills bg-dark mb-0" id="pills-tab" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">CREAR</a>
             </li>
@@ -9,10 +10,13 @@
                 <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">LISTAR</a>
             </li>
         </ul>
+
     </div>
     <div class="card-body">
         <div class="tab-content" id="pills-tabContent">
-            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+
+            <!-- <h5 class="card-title bg-white text-success mb-1" align="center">CABECERA</h5>-->
+            <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" style="max-width: 100rm;">
                 <table>
                     <thead>
                         <tr>
@@ -24,6 +28,7 @@
                 <div class="mb-2"></div>
                 <div class="card-deck ">
                     <div class="card mb-1" style="max-width: 21rem;">
+                        <label id="idU" name="idU" hidden></label>
                         <div class="input-group mb-1">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="lblCedula">Cedula</span>
@@ -57,8 +62,8 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="lblNombre">Dirección</span>
                             </div>
-                            <label type="text" class="form-control" name="direccion" id="direccion" aria-label="Username"
-                                aria-describedby="basic-addon1">
+                            <label type="text" class="form-control" name="direccion" id="direccion"
+                                aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                         <div class="input-group mb-1">
                             <div class="input-group-prepend">
@@ -69,7 +74,7 @@
                         </div>
                     </div>
                     <div class="card  mb-1" style="max-width: 20rem;">
-                        <div class="input-group mb-9">
+                        <div class="input-group mb-10">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="lblCedula">FECHA</span>
                             </div>
@@ -84,12 +89,73 @@
                                 </script>
                         </div>
                         <div class="mb-4"></div>
-                        <button class=" btn btn-success btn-block " onclick="cargarCosumidorFinal()"> CONSUMIDOR FINAL </button>
-                        <button class=" btn btn-secondary btn-block " onclick="limpiarFactura()"> LIMPIAR </button>
+                        <button class=" btn btn-success btn-block " onclick="cargarCosumidorFinal()">
+                            CONSUMIDOR FINAL
+                        </button>
+                        <button class=" btn btn-secondary btn-block " onclick="limpiarFactura()"> LIMPIAR
+                        </button>
                     </div>
                 </div>
-                
+                <hr style=" border-top: 1px dashed red;" />
+                <div class="card text-white bg-secondary mb-0" style="max-width: 100rem;">
+                    <div class="card-header text-success">
+                        <h5 class="card-title   mb-1" align="center">DETALLE</h5>
+                        <input name="buscarPro" id='buscarPro' onkeyup="cargarBusquedaProLista()" class="form-control"
+                            type="text" placeholder="Buscar Producto, Ingresar Id, Nombre o Codigo"
+                            aria-label="Buscar, Ingresar Cedula">
+                    </div>
+                    <div class="card-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-10">
+                                    <table class="table" name="tablaDetalle" id="tablaDetalle">
+                                        <input id="idProd" name="idPro" hidden>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">CODIGO</th>
+                                                <th scope="col">CANTIDAD</th>
+                                                <th scope="col">DESCRIPCION</th>
+                                                <th scope="col">PRECIO UNIT.</th>
+                                                <th scope="col">PRECIO TOTAL</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody style="height: 250px;" style="overflow-x: hidden;"
+                                            style="overflow-y: scroll">
+                                            <tr></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-2">
+                                    <br><br><br><br><br><br><br><br><br>
+                                    <div class="input-group mb-1">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="lblNombre">SUB.TOTAL</span>
+                                        </div>
+                                        <label style="width: 100px;" type="text" class="form-control" name="subtotal"
+                                            id="subtotal" aria-label="Username" aria-describedby="basic-addon1">
+                                    </div>
+                                    <div class="input-group mb-1">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="lblNombre">IVA</span>
+                                        </div>
+                                        <label type="text" class="form-control" name="iva" id="iva"
+                                            aria-label="Username" aria-describedby="basic-addon1">
+                                    </div>
+                                    <div class="input-group mb-1">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="lblNombre">TOTAL</span>
+                                        </div>
+                                        <label type="text" class="form-control" name="total" id="total"
+                                            aria-label="Username" aria-describedby="basic-addon1">
+                                    </div>
+                                </div>
 
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
                 <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                     <table class="table table-striped table-dark table-sm">
                         <thead>
@@ -129,7 +195,37 @@
             </div>
         </div>
     </div>
-</div>
+    <div>
+        <div class="modal" tabindex="-1" role="dialog" id="modalCantidad" name="modalCantidad">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">INGRESE CANTIDAD</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h5 class="card-title bg-white text-success mb-1" align="center" id="infoDet" name="infoDet">
+                            DETALLE</h5>
+                        <div class="form-group">
+                            <input class="form-control" type="number" id="stock" name="stock" value=""
+                                placeholder="Stock" onkeydown="return soloNumeros(event, this)"
+                                onkeyup=" return validarStock(this,1)" />
+                        </div>
+                    </div>
+                    <div id="alertError">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="validarCantidad()">CONTINUAR</button>
+                        <button type="button" class="btn btn-secondary" onclick="borrarFila()"
+                            data-dismiss="modal">CANCELAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 
-{% endblock %}
+    {% endblock %}

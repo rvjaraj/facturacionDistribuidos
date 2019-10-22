@@ -173,6 +173,8 @@ function cargarDatosProductos(id) {
         }
     });
 }
+
+
 /**Factura */
 
 function cargarCosumidorFinal() {
@@ -182,6 +184,7 @@ function cargarCosumidorFinal() {
     $('#telefono').html("999999999")
     $('#direccion').html("*********")
     $('#correo').html("**********")
+    $('#idU').html("FINAL")
 }
 
 function limpiarFactura() {
@@ -192,9 +195,11 @@ function limpiarFactura() {
     $('#direccion').html("")
     $('#correo').html("")
     $('#buscar').val("")
+    $('#idU').val("")
 }
 
 var lista = Array();
+var listaPro = Array();
 
 function cargarBusquedaLista() {
     lista.splice(0, lista.length);
@@ -218,6 +223,8 @@ function cargarBusquedaLista() {
     });
 }
 
+
+
 function cargarUsuarioFactura(id) {
     $.ajax({
         url: "/buscarCliente",
@@ -231,6 +238,7 @@ function cargarUsuarioFactura(id) {
             $('#telefono').html(response[4])
             $('#direccion').html(response[2])
             $('#correo').html(response[6])
+            $('#idU').val(response[0])
 
         },
         error: function(error) {
@@ -248,3 +256,139 @@ $('#buscar').autocomplete({
         cargarUsuarioFactura(res + "")
     }
 });
+
+function cargarBusquedaProLista() {
+    listaPro.splice(0, lista.length);
+    var why = $('#buscarPro').val();
+    $.ajax({
+        url: "/buscarProducto",
+        data: { 'dat': why },
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            for (let index = 0; index < response.length; index++) {
+                const res = response[index];
+                listaPro[index] = res[0] + "|  ID: " + res[0] + " NOM: " + res[1] + "  COD:" + res[4]
+
+            }
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}
+
+function cargarDetalle(id) {
+    $.ajax({
+        url: "/buscarProductoId",
+        data: { 'id': id },
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            var htmlTags = '<tr id=' + response[0] + '>' +
+                '<td>' + response[4] + '</td>' +
+                '<td>' + "1" + '</td>' +
+                '<td>' + response[1] + '</td>' +
+                '<td>' + response[2] + '</td>' +
+                '<td>' + response[2] + '</td>' +
+                '</tr>';
+
+            $('#tablaDetalle tbody').append(htmlTags);
+            $("#buscarPro").val("")
+            $('#idProd').val(response[0])
+
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}
+
+$('#buscarPro').autocomplete({
+    source: listaPro,
+    select: function(event, ui) {
+        $("#buscarPro").val(ui.item.value)
+        txt = $("#buscarPro").val()
+        res = txt.split("|")
+        cargarDetalle(res + "")
+        $("#modalCantidad").modal('show')
+        datos = cantidadExisten(res + "")
+
+
+    }
+});
+
+function cantidadExisten(id) {
+    var datos = Array()
+    $.ajax({
+        url: "/buscarProductoId",
+        data: { 'id': id },
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            datos = [response[1], response[3]]
+            $("#infoDet").html(" EL PRODUCTO: " + datos[0] + "<br> TIENE EN STOCK: " + datos[1] + "<br> Ingrese una  cantidad Menor")
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+    return datos
+}
+
+function validarCantidad() {
+    cant = $("#stock").val()
+    id = $('#idProd').val()
+    $.ajax({
+        url: "/buscarProductoId",
+        data: { 'id': id },
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            var cantidad = response[3]
+            if (cant <= cantidad) {
+                idrow = $('#tablaDetalle tr:last').attr("id")
+                fila = String($('#tablaDetalle').find("#" + idrow).html())
+                fila1 = fila.split('<td>')
+                for (let index = 0; index < fila1.length; index++) {
+                    fila1[index] = fila1[index].replace("</td>", "");
+                }
+                fila1.shift();
+                precioTotal = cant * fila1[3]
+                precioTotal = precioTotal.toFixed(2)
+                var htmlTags =
+                    '<td>' + response[4] + '</td>' +
+                    '<td>' + cant + '</td>' +
+                    '<td>' + response[1] + '</td>' +
+                    '<td>' + response[2] + '</td>' +
+                    '<td>' + precioTotal + '</td>';
+                $('#tablaDetalle').find("#" + idrow).html(htmlTags)
+                $("#modalCantidad").modal('hide')
+                calcularFactura()
+            } else {
+                errorMensaje("ERROR: DEBE SER UN NUMERO")
+            }
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+
+}
+
+function borrarFila() {
+    idrow = $('#tablaDetalle tr:last').attr("id")
+    $('#' + idrow).remove();
+}
+
+function calcularFactura() {
+    var table = document.getElementById("tablaDetalle");
+    for (var i = 0; i < table.rows.length; i++) {
+        var row = "";
+        for (var j = 0; j < table.rows[i].cells.length; j++) {
+            row += table.rows[i].cells[j].innerHTML;
+            row += " | ";
+        }
+        alert(row);
+    }
+}
