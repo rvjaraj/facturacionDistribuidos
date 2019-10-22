@@ -112,6 +112,7 @@
                                         <input id="idProd" name="idPro" hidden>
                                         <thead>
                                             <tr>
+                                                    <th scope="col">ID</th>
                                                 <th scope="col">CODIGO</th>
                                                 <th scope="col">CANTIDAD</th>
                                                 <th scope="col">DESCRIPCION</th>
@@ -121,12 +122,11 @@
                                         </thead>
                                         <tbody style="height: 250px;" style="overflow-x: hidden;"
                                             style="overflow-y: scroll">
-                                            <tr></tr>
                                         </tbody>
                                     </table>
                                 </div>
                                 <div class="col-2">
-                                    <br><br><br><br><br><br><br><br><br>
+                                    <br><br><br><br>
                                     <div class="input-group mb-1">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="lblNombre">SUB.TOTAL</span>
@@ -148,6 +148,11 @@
                                         <label type="text" class="form-control" name="total" id="total"
                                             aria-label="Username" aria-describedby="basic-addon1">
                                     </div>
+                                    <div class="input-group mb-1">
+                                            <button class=" btn btn-success btn-block " onclick="guardarFactura()">
+                                                    GUARDAR / IMPRIMIR
+                                                </button>
+                                        </div>
                                 </div>
 
                             </div>

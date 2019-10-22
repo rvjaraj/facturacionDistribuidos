@@ -187,16 +187,6 @@ function cargarCosumidorFinal() {
     $('#idU').html("FINAL")
 }
 
-function limpiarFactura() {
-    $('#cedula').html("")
-    $('#nombre').html("")
-    $('#apellido').html("")
-    $('#telefono').html("")
-    $('#direccion').html("")
-    $('#correo').html("")
-    $('#buscar').val("")
-    $('#idU').val("")
-}
 
 var lista = Array();
 var listaPro = Array();
@@ -286,6 +276,7 @@ function cargarDetalle(id) {
         dataType: 'json',
         success: function(response) {
             var htmlTags = '<tr id=' + response[0] + '>' +
+                '<td>' + response[0] + '</td>' +
                 '<td>' + response[4] + '</td>' +
                 '<td>' + "1" + '</td>' +
                 '<td>' + response[1] + '</td>' +
@@ -354,9 +345,10 @@ function validarCantidad() {
                     fila1[index] = fila1[index].replace("</td>", "");
                 }
                 fila1.shift();
-                precioTotal = cant * fila1[3]
+                precioTotal = cant * fila1[4]
                 precioTotal = precioTotal.toFixed(2)
                 var htmlTags =
+                    '<td>' + response[0] + '</td>' +
                     '<td>' + response[4] + '</td>' +
                     '<td>' + cant + '</td>' +
                     '<td>' + response[1] + '</td>' +
@@ -383,12 +375,106 @@ function borrarFila() {
 
 function calcularFactura() {
     var table = document.getElementById("tablaDetalle");
-    for (var i = 0; i < table.rows.length; i++) {
-        var row = "";
+    var id = parseFloat(0);
+    var subtotal = parseFloat(0);
+    var total = parseFloat(0);
+    for (var i = 1; i < table.rows.length; i++) {
+        var row = Array();
         for (var j = 0; j < table.rows[i].cells.length; j++) {
-            row += table.rows[i].cells[j].innerHTML;
-            row += " | ";
+            res = table.rows[i].cells[j].innerHTML;
+            row[j] = res
         }
-        alert(row);
+        subtotal = subtotal + parseFloat(row[4])
+        console.log(row);
+
+    }
+    console.log(subtotal);
+    iva = parseFloat(subtotal) * parseFloat(0.12);
+    console.log(iva);
+    total = subtotal + iva;
+    $("#total").html(total.toFixed(2))
+    $("#iva").html(iva.toFixed(2))
+    $("#subtotal").html(subtotal.toFixed(2))
+}
+
+
+function limpiarFactura() {
+    $('#cedula').html("")
+    $('#nombre').html("")
+    $('#apellido').html("")
+    $('#telefono').html("")
+    $('#direccion').html("")
+    $('#correo').html("")
+    $('#buscar').val("")
+    $('#idU').val("")
+    $("#tablaDetalle tr").remove();
+
+}
+
+function guardarFactura() {
+    var table = document.getElementById("tablaDetalle");
+    idCliente = $('#idU').val()
+    if (idCliente != "") {
+        if (table.rows.length >= 2) {
+            console.log(idCliente)
+            fecha = $('#fecha').html()
+            total = $("#total").html()
+            iva = $("#iva").html()
+            subtotal = $("#subtotal").html()
+            $.ajax({
+                url: "/addFactura",
+                data: {
+                    'cliente': idCliente,
+                    'fecha': fecha,
+                    'total': total,
+                    'iva': iva,
+                    'subtotal': subtotal
+                },
+                type: 'POST',
+                dataType: 'json',
+                success: function(response) {
+                    if (response != "") {
+                        var table = document.getElementById("tablaDetalle");
+                        for (var i = 1; i < table.rows.length; i++) {
+                            var row = Array();
+                            for (var j = 0; j < table.rows[i].cells.length; j++) {
+                                res = table.rows[i].cells[j].innerHTML;
+                                row[j] = res
+                            }
+                            $.ajax({
+                                url: "/addDetalle",
+                                data: {
+                                    "producto": row[0],
+                                    "cantidad": row[2],
+                                    "subtotal": row[5],
+                                    "factura": response[0][0]
+                                },
+                                type: 'POST',
+                                dataType: 'json',
+                                success: function(response) {
+                                    console.log(response)
+
+                                },
+                                error: function(error) {
+                                    console.log(error);
+                                }
+                            });
+
+                        }
+                        alert("FACTURA INGRESADA")
+                        location.reload();
+                    } else {
+                        console.log("errorr ");
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        } else {
+            alert("INGRESE PRODUCTOS")
+        }
+    } else {
+        alert("INGRESE CLIENTE")
     }
 }

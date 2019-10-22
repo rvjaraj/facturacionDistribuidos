@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_mysqldb import MySQL
 from Controlador.ControladorUsuario import Usuario, ControladorUsuario
 from Controlador.ControladorProducto import Producto, ControladorProducto
+from Controlador.ControladorFactura import Factura, ControladorFactura
+from Controlador.ControladorDetalle import Detalle, ControladorDetalle
 import json
 app = Flask(__name__)
 
@@ -175,6 +177,43 @@ def actualizarProducto():
 def vistaFactura():
     return render_template("vistaFactura.html")
 
+
+@app.route("/addFactura", methods=['POST'])
+def addFactura():
+     if request.method == 'POST':
+        id = 0
+        usuario = request.form['cliente']
+        fecha = request.form['fecha']
+        total = request.form['total']
+        iva = request.form['iva']
+        subtotal = request.form['subtotal']
+        descuento = 0
+        eliminado = 0
+        fac = Factura(id, subtotal, iva, total, fecha, descuento, usuario, eliminado)
+        con = ControladorFactura()
+        if(con.ingresar(fac)):
+            res = con.ultimaFactura()
+            return json.dumps(res)
+        else:
+            return json.dumps("")
+            #flash('ERROR AL ACTUALIZADO PRODUCTO')
+
+@app.route("/addDetalle", methods=['POST'])
+def addDetalle():
+     if request.method == 'POST':
+        id = 0
+        producto = request.form['producto']
+        cantidad = request.form['cantidad']
+        subtotal = request.form['subtotal']
+        factura = request.form['factura']
+
+        det = Detalle(id, cantidad, subtotal, producto, factura)
+        con = ControladorDetalle()
+        if(con.ingresar(det)):
+            
+            return json.dumps("true")
+        else:
+            return json.dumps("")     
 
 
 if __name__ == '__main__':
