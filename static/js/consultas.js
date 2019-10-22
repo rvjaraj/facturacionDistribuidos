@@ -19,7 +19,7 @@ function cargarBusqueda() {
                     " <td>" + res[7] + "</td>" +
                     " <td> " +
                     "<a class='btn btn-secondary' data-toggle='modal' onclick='cargarDatosCLiente(" + res[0] + ")' data-target='#exampleModalLong'>EDITAR</a>" +
-                    "<a href='/eliminar/" + res[0] + "' onclick='confirmarEliminacion(\'USUARIO\',event)' >ELIMINAR</a> </td>" +
+                    "<a class=\'btn btn-danger btn-delete\' href='/eliminar/" + res[0] + "' onclick=\"confirmarEliminacion(\'USUARIO\',event)\" >ELIMINAR </a>" +
                     "</tr>"
 
             }
@@ -40,7 +40,7 @@ function confirmarEliminacion(txt, event) {
 function cargarDatosCLiente(id) {
     $.ajax({
         url: "/buscarCliente",
-        data: { 'id': id },
+        data: { 'idd': id },
         type: 'POST',
         dataType: 'json',
         success: function(response) {
@@ -131,7 +131,7 @@ function cargarBusquedaProducto() {
                     " <td>" + res[5] + "</td>" +
                     " <td> " +
                     "<a class='btn btn-secondary' data-toggle='modal' onclick='cargarDatosProductos('" + res[0] + "')' data-target='#exampleModalLong'>EDITAR</a>" +
-                    "<a href='/eliminarProducto/" + res[0] + "' onclick=\"confirmarEliminacion(\'PRODUCTO\',event)\" class='btn btn-danger btn-delete'>ELIMINAR</a>" +
+                    "<a class=\'btn btn-danger btn-delete\' href='/eliminarProducto/" + res[0] + "' onclick=\"confirmarEliminacion(\'PRODUCTO\',event)\" >ELIMINAR </a>" +
                     "</tr>"
             }
 
@@ -173,3 +173,78 @@ function cargarDatosProductos(id) {
         }
     });
 }
+/**Factura */
+
+function cargarCosumidorFinal() {
+    $('#cedula').html("999999999")
+    $('#nombre').html("CONSUMIDOR")
+    $('#apellido').html("FINAL")
+    $('#telefono').html("999999999")
+    $('#direccion').html("*********")
+    $('#correo').html("**********")
+}
+
+function limpiarFactura() {
+    $('#cedula').html("")
+    $('#nombre').html("")
+    $('#apellido').html("")
+    $('#telefono').html("")
+    $('#direccion').html("")
+    $('#correo').html("")
+    $('#buscar').val("")
+}
+
+var lista = Array();
+
+function cargarBusquedaLista() {
+    lista.splice(0, lista.length);
+    var why = $('#buscar').val();
+    $.ajax({
+        url: "/buscarClientes",
+        data: { 'cedula': why },
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+
+            for (let index = 0; index < response.length; index++) {
+                const res = response[index];
+                lista[index] = res[0] + "| " + res[1] + " " + res[2] + " " + res[3]
+
+            }
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}
+
+function cargarUsuarioFactura(id) {
+    $.ajax({
+        url: "/buscarCliente",
+        data: { 'idd': id },
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            $('#cedula').html(response[1])
+            $('#nombre').html(response[2])
+            $('#apellido').html(response[3])
+            $('#telefono').html(response[4])
+            $('#direccion').html(response[2])
+            $('#correo').html(response[6])
+
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}
+
+$('#buscar').autocomplete({
+    source: lista,
+    select: function(event, ui) {
+        $("#buscar").val(ui.item.value)
+        txt = $("#buscar").val()
+        res = txt.split("|")
+        cargarUsuarioFactura(res + "")
+    }
+});

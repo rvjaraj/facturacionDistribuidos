@@ -31,7 +31,7 @@ def buscaClientes():
 @app.route("/buscarCliente", methods=['POST'])
 def buscaCliente():
     if request.method == 'POST':
-        id = request.form['id']
+        id = request.form['idd']
         con = ControladorUsuario()
         data = con.buscarUsuario(id)
         return json.dumps(data)
@@ -170,6 +170,12 @@ def actualizarProducto():
             flash('ERROR AL ACTUALIZADO PRODUCTO')
         return redirect(url_for('vistaProductos'))
 
+#Controlador Factura
+@app.route("/vistaFactura")
+def vistaFactura():
+    return render_template("vistaFactura.html")
+
+
 
 if __name__ == '__main__':
     app.debug = True
@@ -178,3 +184,4 @@ if __name__ == '__main__':
 
 # modal
 # toast
+#owerflow x y 

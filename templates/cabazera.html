@@ -7,16 +7,31 @@
     <!-----Vinculación de archivo css bootstrap 4 ------>
     <link rel="stylesheet" href="{{url_for('static', filename='css/css/bootstrap.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/css/toast.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/css/jquery-ui.css')}}">
 </head>
 
 <body style="background: #4CA1AF;  /* fallback for old browsers */
             background: -webkit-linear-gradient(to right, #C4E0E5, #4CA1AF);  /* Chrome 10-25, Safari 5.1-6 */
             background: linear-gradient(to right, #C4E0E5, #4CA1AF); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         ">
-
-    <!-- NAVIGATION  -->
-    <nav class="navbar navbar-dark bg-dark">
-        <a class="navbar-brand" href="/">REGRESAR AL INICIO</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">INICIO</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/vistaFactura">FACTURA <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/vistaProductos">PRODUCTOS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/vistaCliente">CLIENTES</a>
+                </li>
+            </ul>
+        </div>
     </nav>
 
     <div class="container pt-5">
@@ -31,6 +46,8 @@
 
     <!-- jQuery library -->
     <script src="{{url_for('static', filename='js/js/jquery-1.11.2.js')}}"></script>
+
+    <script src="{{url_for('static', filename='js/js/jquery-ui.js')}}"></script>
 
     <script src="{{url_for('static', filename='js/js/popper.min.js')}}"></script>
     <script src="{{url_for('static', filename='js/js/bootstrap.js')}}"></script>
