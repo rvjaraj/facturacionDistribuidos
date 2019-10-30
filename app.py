@@ -215,12 +215,40 @@ def addDetalle():
         else:
             return json.dumps("")     
 
+@app.route("/buscarCedula", methods=['POST'])
+def buscarProductoCedula():
+    if request.method == 'POST':
+        txt = request.form['cedula']
+        con = ControladorUsuario()
+        data = con.buscarCedula(txt)
+        return json.dumps(data)
+
+@app.route("/addFactruaUsuario", methods=['POST'])
+def addFactruaUsuario():
+    if request.method == 'POST':
+        id = 0
+        cedula = request.form['cedula']
+        nombre = request.form['nombres']
+        apellido = request.form['apellidos']
+        telefono = request.form['telefono']
+        direccion = request.form['direccion']
+        correo = request.form['correo']
+        fechaNac = request.form['fechaNac']
+        eliminado = "0"
+        usr = Usuario(id, cedula, nombre, apellido, telefono,
+                      direccion,  correo, fechaNac, eliminado)
+        con = ControladorUsuario()
+        if(con.ingresar(usr)):
+            return json.dumps("true")
+        else:
+            flash('ERROR AL AGREGAR USUARIO')
+            return json.dumps("false")
 
 if __name__ == '__main__':
     app.debug = True
     app.run(host='localhost', port=5001)
 
-
 # modal
+# dat
 # toast
 #owerflow x y 

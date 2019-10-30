@@ -91,7 +91,19 @@ class ControladorUsuario:
         cur.execute('SELECT * FROM usuarios WHERE eliminado <> 1 and id = %s', (id))
         data = cur.fetchall()
         cur.close()
+        
         return data[0]
+    
+    def buscarCedula(self, cedula):
+        cur = db.cursor()
+        cur.execute('SELECT * FROM usuarios WHERE eliminado <> 1 and cedula = %s', (cedula))
+        data = cur.fetchall()
+        cur.close()
+        print(str(len(data))+"aaaaaaaaaaaaaa")
+        if(len(data)==0):
+            return False
+        else:
+            return data[0]
 
 
 if __name__ == "__main__":

@@ -27,6 +27,8 @@ function validarCedula(element) {
     }
 }
 
+
+
 function validarLetras(element) {
     txt = $('#' + element.id).val()
     if (txt.length >= 3) {
@@ -207,6 +209,7 @@ function validarEditarCliente() {
         errorMensajeE("TELEFONO INCORRECTO")
     }
 
+
     if ($("#direccionE").hasClass("is-valid")) {
         cont++ //4
     } else {
@@ -239,6 +242,60 @@ function validarEditarCliente() {
 
 }
 
+
+function validarFactruaCliente() {
+    cont = 0;
+    if ($("#fechaNacE").hasClass("is-valid")) {
+        cont++ //1
+    } else {
+        errorMensajeE("SELECCIONE UN FECHA VALIDA")
+    }
+
+    if ($("#correoE").hasClass("is-valid")) {
+        cont++ //2
+    } else {
+        errorMensajeE("CORREO INCORRECTO")
+    }
+
+    if ($("#telefonoE").hasClass("is-valid")) {
+        cont++ //3
+    } else {
+        errorMensajeE("TELEFONO INCORRECTO")
+    }
+
+
+    if ($("#direccionE").hasClass("is-valid")) {
+        cont++ //4
+    } else {
+        errorMensajeE("DIRECCION INCORRECTO")
+    }
+
+    if ($("#apellidosE").hasClass("is-valid")) {
+        cont++ //5
+    } else {
+        errorMensajeE("APELLIDO INCORRECTO")
+    }
+
+    if ($("#nombresE").hasClass("is-valid")) {
+        cont++ //6
+    } else {
+        errorMensajeE("NOMBRE INCORRECTO")
+    }
+
+    if ($("#cedulaE").hasClass("is-valid")) {
+        cont++ //7
+    } else {
+        errorMensajeE("CEDULA INCORRECTA")
+    }
+    if (cont == 7) {
+        crearFacCliente()
+        return true
+    } else {
+        return false
+    }
+
+}
+
 function errorMensajeE(menseje) {
     html = "<br><div id='alertError' class='alert alert-danger alert-dismissible fade show' role='alert'>" +
         menseje + "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>" +
@@ -255,14 +312,16 @@ function soloDecimales(event, element) {
     if (event.shiftKey)
         return false
     if (event.keyCode == 190 && txt != "" || event.keyCode == 110 && txt != "") {
-        if (txt.indexOf(".") > -1) {
+        if (txt.indexOf(".") > 0) {
             return false
+        } else {
+            return true
+
         }
-        return true
     }
 
     if (event.keyCode != 46 && event.keyCode != 8 && event.keyCode != 37 && event.keyCode != 39)
-        if ($('#' + element.id).val().length >= 10)
+        if ($('#' + element.id).val().length >= 5)
             return false
 
     if (event.keyCode < 48 || event.keyCode > 57)
@@ -270,12 +329,9 @@ function soloDecimales(event, element) {
             if (event.keyCode != 46 && event.keyCode != 8 && event.keyCode != 37 && event.keyCode != 39)
                 return false
 
-
-
 }
 
 function validarDecimales(element) {
-
     txt = $('#' + element.id).val()
     if (txt != "") {
         var RE = /^\d*(\.\d{1})?\d{0,1}$/;
@@ -290,7 +346,41 @@ function validarDecimales(element) {
         $('#' + element.id).removeClass('is-valid');
         $('#' + element.id).addClass('is-invalid');
     }
+
+    if (Number(txt) > 100 && element.id == "descuento") {
+        $('#' + element.id).removeClass('is-valid');
+        $('#' + element.id).addClass('is-invalid');
+    }
 }
+
+function validarDecimalesF(element, id) {
+    txt = $('#' + element.id).val()
+    if (txt != "") {
+        var RE = /^\d*(\.\d{1})?\d{0,1}$/;
+        if (RE.test(txt)) {
+            $('#' + element.id).removeClass('is-invalid');
+            $('#' + element.id).addClass('is-valid');
+        } else {
+            $('#' + element.id).removeClass('is-valid');
+            $('#' + element.id).addClass('is-invalid');
+        }
+    } else {
+        $('#' + element.id).removeClass('is-valid');
+        $('#' + element.id).addClass('is-invalid');
+    }
+
+    if (Number(txt) > 100 && element.id == "descuento") {
+        $('#' + element.id).removeClass('is-valid');
+        $('#' + element.id).addClass('is-invalid');
+    }
+
+    if ($('#' + element.id).hasClass("is-valid")) {
+        alert(id)
+    } else {
+        alert("ERRO AL CALCULAR NUEVO PRECIO")
+    }
+}
+
 
 function validarStock(element) {
     txt = $('#' + element.id).val()

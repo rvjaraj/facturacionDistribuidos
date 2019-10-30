@@ -20,7 +20,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th style="width: 100%"><input name="buscar" id='buscar' onkeyup="cargarBusquedaLista()" class="form-control" type="text" placeholder="Buscar Cliente, Ingresar Cedula, Nombre o Apellido" aria-label="Buscar, Ingresar Cedula"></th>
+                            <th style="width: 100%"><input name="buscar" id='buscar' onkeyup="cargarDatosEnter(event)" onkeypress="cargarBusquedaLista()" class="form-control" type="text" placeholder="Buscar Cliente, Ingresar Cedula, Nombre o Apellido"></th>
                             <th><button type="button" class="btn btn-outline-danger" onclick="window.location.href='/vistaFactura'">X</button></th>
                         </tr>
                     </thead>
@@ -97,7 +97,7 @@
                     </div>
                 </div>
                 <hr style=" border-top: 1px dashed red;" />
-                <div class="card text-white bg-secondary mb-0" style="max-width: 100rem;">
+                <div class="card text-white  mb-0" style="max-width: 100rem;">
                     <div class="card-header text-success">
                         <h5 class="card-title   mb-1" align="center">DETALLE</h5>
                         <input name="buscarPro" id='buscarPro' onkeyup="cargarBusquedaProLista()" class="form-control"
@@ -112,10 +112,11 @@
                                         <input id="idProd" name="idPro" hidden>
                                         <thead>
                                             <tr>
-                                                    <th scope="col">ID</th>
+                                                <th scope="col">ID</th>
                                                 <th scope="col">CODIGO</th>
                                                 <th scope="col">CANTIDAD</th>
                                                 <th scope="col">DESCRIPCION</th>
+                                                <th scope="col">DESCUENTO</th>
                                                 <th scope="col">PRECIO UNIT.</th>
                                                 <th scope="col">PRECIO TOTAL</th>
                                             </tr>
@@ -149,10 +150,10 @@
                                             aria-label="Username" aria-describedby="basic-addon1">
                                     </div>
                                     <div class="input-group mb-1">
-                                            <button class=" btn btn-success btn-block " onclick="guardarFactura()">
-                                                    GUARDAR / IMPRIMIR
-                                                </button>
-                                        </div>
+                                        <button class=" btn btn-success btn-block " onclick="guardarFactura()">
+                                            GUARDAR / IMPRIMIR
+                                        </button>
+                                    </div>
                                 </div>
 
                             </div>
@@ -200,37 +201,98 @@
             </div>
         </div>
     </div>
-    <div>
-        <div class="modal" tabindex="-1" role="dialog" id="modalCantidad" name="modalCantidad">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">INGRESE CANTIDAD</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+</div>
+<div class="modal" tabindex="-1" role="dialog" id="modalCantidad" name="modalCantidad">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">INGRESE CANTIDAD</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 class="card-title bg-white text-success mb-1" align="center" id="infoDet" name="infoDet">
+                    DETALLE</h5>
+                <div class="form-group">
+                    <input class="form-control" type="number" id="stock" name="stock" value="" placeholder="Stock"
+                        onkeydown="return soloNumeros(event, this)" onkeyup=" return validarStock(this,1)" />
+                </div>
+            </div>
+            <div id="alertError">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="validarCantidaStock()">CONTINUAR</button>
+                <button type="button" class="btn btn-secondary" onclick="borrarFila()"
+                    data-dismiss="modal">CANCELAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="crearUsuario" name="crearUsuario">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">CREAR USUARIO</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" name="modal">
+                <div class="row">
+                    <div class="card card-body">
+                        <form id="formularioEditar" method="POST" action="/usuarioFactura">
+                            <div class="form-group">
+                                <input class="form-control" type="text" id="idE" name="idE" value="" hidden>
+                            </div>
+
+                            <div class="form-group">
+                                <input class="form-control" type="text" id="cedulaE" name="cedulaE" value=""
+                                    placeholder="Cedula" onkeydown="return soloNumeros(event, this)"
+                                    onkeyup="validarCedula(this)">
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" type="text" id="nombresE" name="nombresE" value=""
+                                    placeholder="Nombres" onkeypress="return soloLetras(event)"
+                                    onkeyup="validarLetras(this)" />
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" type="text" id="apellidosE" name="apellidosE" value=""
+                                    placeholder="Apellidos" onkeypress="return soloLetras(event)"
+                                    onkeyup="validarLetras(this)" />
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" type="text" id="direccionE" name="direccionE" value=""
+                                    placeholder="Dirección" onkeyup="validarLetras(this)" />
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" type="text" id="telefonoE" name="telefonoE" value=""
+                                    placeholder="Teléfono" onkeydown="return soloNumeros(event, this)"
+                                    onkeyup=" return validarCantidad(this,10)" />
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" type="text" id="correoE" name="correoE" value=""
+                                    placeholder="Correo" onkeyup=" validarCorreo(this) " />
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" type="date" name="fechaNacE" id="fechaNacE"
+                                    placeholder="Ingrese su fecha de nacimiento" onchange="validarFecha(this)">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-secondary" data-dismiss="modal">CANCELAR</button>
+                                <button type="button" class="btn btn-primary"
+                                    onclick="validarFactruaCliente()">GUARDAR</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="modal-body">
-                        <h5 class="card-title bg-white text-success mb-1" align="center" id="infoDet" name="infoDet">
-                            DETALLE</h5>
-                        <div class="form-group">
-                            <input class="form-control" type="number" id="stock" name="stock" value=""
-                                placeholder="Stock" onkeydown="return soloNumeros(event, this)"
-                                onkeyup=" return validarStock(this,1)" />
-                        </div>
-                    </div>
-                    <div id="alertError">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="validarCantidad()">CONTINUAR</button>
-                        <button type="button" class="btn btn-secondary" onclick="borrarFila()"
-                            data-dismiss="modal">CANCELAR</button>
-                    </div>
+
+                </div>
+                <div id="alertErrorE">
                 </div>
             </div>
         </div>
 
     </div>
-
-
-    {% endblock %}
+</div>
+{% endblock %}

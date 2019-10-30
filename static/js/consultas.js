@@ -175,6 +175,32 @@ function cargarDatosProductos(id) {
 }
 
 
+function validarCedulaTxt(txt) {
+    var cad = txt
+    var total = 0;
+    var longitud = cad.length;
+    if (cad !== "" && longitud === 10) {
+        for (i = 0; i < longitud - 1; i++) {
+            if (i % 2 === 0) {
+                var aux = cad.charAt(i) * 2;
+                if (aux > 9) aux -= 9;
+                total += aux;
+            } else {
+                total += parseInt(cad.charAt(i)); // parseInt o concatenará en lugar de sumar
+            }
+        }
+        total = total % 10 ? 10 - total % 10 : 0;
+        var aux = cad.charAt(9);
+        if (cad.charAt(9) == total) {
+            return true
+        } else {
+            return false
+        }
+    } else {
+        return false
+    }
+}
+
 /**Factura */
 
 function cargarCosumidorFinal() {
@@ -190,6 +216,46 @@ function cargarCosumidorFinal() {
 
 var lista = Array();
 var listaPro = Array();
+
+function cargarDatosEnter(event) {
+    if (event.keyCode == 13) {
+        cedula = $('#buscar').val();
+        if (validarCedulaTxt(cedula)) {
+            $.ajax({
+                url: "/buscarCedula",
+                data: { 'cedula': cedula },
+                type: 'POST',
+                dataType: 'json',
+                success: function(response) {
+                    if (response != "") {
+                        $('#cedula').html(response[1])
+                        $('#nombre').html(response[2])
+                        $('#apellido').html(response[3])
+                        $('#telefono').html(response[4])
+                        $('#direccion').html(response[2])
+                        $('#correo').html(response[6])
+                        $('#idU').val(response[0])
+                        $('#buscar').autocomplete({ source: [] });
+                    } else {
+                        if (confirm("NO EXISTE CLIENTE, DESEA REGISTRAR")) {
+                            $('#crearUsuario').modal('show');
+                            $('#cedulaE').val(cedula);
+                            $('#cedulaE').addClass('is-valid');
+                        } else {
+
+                        }
+                    }
+
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        } else {
+            alert('CEDULA INCORRECTA')
+        }
+    }
+}
 
 function cargarBusquedaLista() {
     lista.splice(0, lista.length);
@@ -248,7 +314,7 @@ $('#buscar').autocomplete({
 });
 
 function cargarBusquedaProLista() {
-    listaPro.splice(0, lista.length);
+    listaPro.splice(0, listaPro.length);
     var why = $('#buscarPro').val();
     $.ajax({
         url: "/buscarProducto",
@@ -327,7 +393,7 @@ function cantidadExisten(id) {
     return datos
 }
 
-function validarCantidad() {
+function validarCantidaStock() {
     cant = $("#stock").val()
     id = $('#idProd').val()
     $.ajax({
@@ -352,13 +418,14 @@ function validarCantidad() {
                     '<td>' + response[4] + '</td>' +
                     '<td>' + cant + '</td>' +
                     '<td>' + response[1] + '</td>' +
+                    '<td><input value=\'' + response[5] + '\' class="form-control"  type="number" step="0.01" id="descuento" name="descuento" onkeydown="return soloDecimales(event, this)"  onkeyup="validarDecimalesF(this,' + response[0] + ')"></td>' +
                     '<td>' + response[2] + '</td>' +
                     '<td>' + precioTotal + '</td>';
                 $('#tablaDetalle').find("#" + idrow).html(htmlTags)
                 $("#modalCantidad").modal('hide')
                 calcularFactura()
             } else {
-                errorMensaje("ERROR: DEBE SER UN NUMERO")
+                errorMensaje("ERROR: DEBE SER UN NUMERO MENOR")
             }
         },
         error: function(error) {
@@ -367,6 +434,8 @@ function validarCantidad() {
     });
 
 }
+
+
 
 function borrarFila() {
     idrow = $('#tablaDetalle tr:last').attr("id")
@@ -477,4 +546,29 @@ function guardarFactura() {
     } else {
         alert("INGRESE CLIENTE")
     }
+}
+
+function crearFacCliente() {
+    $.ajax({
+        url: "/addFactruaUsuario",
+        data: {
+            'id': document.getElementById('idE').value,
+            'cedula': document.getElementById('cedulaE').value,
+            'nombres': document.getElementById('nombresE').value,
+            'apellidos': document.getElementById('apellidosE').value,
+            'telefono': "9999999999",
+            'direccion': document.getElementById('direccionE').value,
+            'correo': document.getElementById('correoE').value,
+            'fechaNac': document.getElementById('fechaNacE').value
+        },
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            console.log(response);
+            $('#crearUsuario').modal('hide');
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
 }
