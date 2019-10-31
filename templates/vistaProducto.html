@@ -14,9 +14,10 @@
             <form method="POST" action="/addProducto" onsubmit=" return  validarIngresoProducto()">
                 <h5 class="card-title bg-white">CREACION DE PRODUCTOS</h5>
                 <div class="form-group">
-                    <input class="form-control" type="text" id="codigo" name="codigo" value="" placeholder="Codigo" onkeyup="validarLetras(this)" />
+                    <input class="form-control" type="text" id="codigo" name="codigo" autocomplete="off" value="" placeholder="Codigo" onkeyup="validarLetras(this)" onkeypress="makeCode(this)" />
                 </div>
-                <div class="form-group">
+                <div id="qrcode" style="width:100px; height:100px; margin-top:15px;" title="http://jindo.dev.naver.com/collie"><canvas width="100" height="100" style="display: none;"></canvas><img style="display: block;"></div>
+                <div class="form-group"><br><br>
                     <input class="form-control" type="text" id="nombre" name="nombre" value="" placeholder="Nombre" onkeypress="return soloLetras(event)" onkeyup="validarLetras(this)" />
                 </div>
                 <div class="form-group">
