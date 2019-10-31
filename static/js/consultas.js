@@ -367,10 +367,10 @@ $('#buscarPro').autocomplete({
         $("#buscarPro").val(ui.item.value)
         txt = $("#buscarPro").val()
         res = txt.split("|")
-        cargarDetalle(res + "")
-        $("#modalCantidad").modal('show')
-        datos = cantidadExisten(res + "")
+            //cargarDetalle(res + "")
 
+        $("#modalCantidad").modal('show')
+        cantidadExisten(res + "")
 
     }
 });
@@ -385,12 +385,14 @@ function cantidadExisten(id) {
         success: function(response) {
             datos = [response[1], response[3]]
             $("#infoDet").html(" EL PRODUCTO: " + datos[0] + "<br> TIENE EN STOCK: " + datos[1] + "<br> Ingrese una  cantidad Menor")
+            $("#buscarPro").val("")
+            $('#idProd').val(id)
         },
         error: function(error) {
             console.log(error);
         }
     });
-    return datos
+
 }
 
 function validarCantidaStock() {
@@ -404,24 +406,29 @@ function validarCantidaStock() {
         success: function(response) {
             var cantidad = response[3]
             if (cant <= cantidad) {
-                idrow = $('#tablaDetalle tr:last').attr("id")
-                fila = String($('#tablaDetalle').find("#" + idrow).html())
-                fila1 = fila.split('<td>')
-                for (let index = 0; index < fila1.length; index++) {
-                    fila1[index] = fila1[index].replace("</td>", "");
-                }
-                fila1.shift();
-                precioTotal = cant * fila1[4]
-                precioTotal = precioTotal.toFixed(2)
+                id = response[0]
+                nombre = response[1]
+                precio = response[2]
+                stk = response[3]
+                codigo = response[4]
+                descueto = response[5]
+
+                precioConDescuento = (precio - ((descueto * precio) / 100)).toFixed(2)
+                iva = (parseFloat(precioConDescuento * 0.12)).toFixed(2)
+                precioConIva = (parseFloat(iva) + parseFloat(precioConDescuento)).toFixed(2)
+
+                precioTotalDetalle = ((parseFloat(precioConDescuento) * (cant))).toFixed(2);
+                totalIva = parseFloat(iva * cant).toFixed(2)
                 var htmlTags =
-                    '<td>' + response[0] + '</td>' +
-                    '<td>' + response[4] + '</td>' +
+                    '<tr><td>' + id + '</td>' +
+                    '<td>' + codigo + '</td>' +
                     '<td>' + cant + '</td>' +
-                    '<td>' + response[1] + '</td>' +
-                    '<td><input value=\'' + response[5] + '\' class="form-control"  type="number" step="0.01" id="descuento" name="descuento" onkeydown="return soloDecimales(event, this)"  onkeyup="validarDecimalesF(this,' + response[0] + ')"></td>' +
-                    '<td>' + response[2] + '</td>' +
-                    '<td>' + precioTotal + '</td>';
-                $('#tablaDetalle').find("#" + idrow).html(htmlTags)
+                    '<td>' + nombre + '</td>' +
+                    '<td><input value=\'' + response[5] + '\' class="form-control"  style="width: 85px;" type="number" step="0.01" id="descuento" name="descuento" onkeydown="return soloDecimales(event, this)"  onkeyup="validarDecimalesF(this,' + id + ')"></td>' +
+                    '<td>' + totalIva + '</td>' +
+                    '<td>' + precioConDescuento + '</td>' +
+                    '<td>' + precioTotalDetalle + '</td></tr>';
+                $('#tablaDetalle tbody').append(htmlTags);
                 $("#modalCantidad").modal('hide')
                 calcularFactura()
             } else {
@@ -447,22 +454,16 @@ function calcularFactura() {
     var id = parseFloat(0);
     var subtotal = parseFloat(0);
     var total = parseFloat(0);
+    var totalIva = parseFloat(0);
     for (var i = 1; i < table.rows.length; i++) {
-        var row = Array();
-        for (var j = 0; j < table.rows[i].cells.length; j++) {
-            res = table.rows[i].cells[j].innerHTML;
-            row[j] = res
-        }
-        subtotal = subtotal + parseFloat(row[4])
-        console.log(row);
-
+        iva = table.rows[i].cells[5].innerHTML
+        totalIva = (parseFloat(totalIva) + parseFloat(iva))
+        subtotal = subtotal + parseFloat(table.rows[i].cells[7].innerHTML)
     }
-    console.log(subtotal);
-    iva = parseFloat(subtotal) * parseFloat(0.12);
-    console.log(iva);
-    total = subtotal + iva;
+    total = subtotal + totalIva
+
     $("#total").html(total.toFixed(2))
-    $("#iva").html(iva.toFixed(2))
+    $("#iva").html(totalIva.toFixed(2))
     $("#subtotal").html(subtotal.toFixed(2))
 }
 

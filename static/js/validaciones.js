@@ -375,7 +375,44 @@ function validarDecimalesF(element, id) {
     }
 
     if ($('#' + element.id).hasClass("is-valid")) {
-        alert(id)
+        var table = document.getElementById("tablaDetalle");
+        var index = 0
+        for (var i = 1; i < table.rows.length; i++) {
+            var row = Array();
+            res = table.rows[i].cells[0].innerHTML;
+            cantidad = table.rows[i].cells[2].innerHTML;
+            index = i
+            if (res == id) {
+                $.ajax({
+                    url: "/buscarProductoId",
+                    data: { 'id': id },
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function(response) {
+                        precio = parseFloat(response[2])
+
+                        precioConDescuento = (precio - ((parseFloat(txt) * precio) / 100)).toFixed(2)
+                        iva = (parseFloat(precioConDescuento * 0.12)).toFixed(2)
+                        precioConIva = (parseFloat(iva) + parseFloat(precioConDescuento)).toFixed(2)
+
+                        precioTotalDetalle = ((parseFloat(precioConDescuento) * (cant))).toFixed(2);
+                        totalIva = parseFloat(iva * cant).toFixed(2)
+
+                        document.getElementById("tablaDetalle").rows[index].cells[5].innerText = String(totalIva) + ""
+                        document.getElementById("tablaDetalle").rows[index].cells[6].innerText = String(precioConDescuento) + ""
+                        document.getElementById("tablaDetalle").rows[index].cells[7].innerText = String(precioTotalDetalle) + ""
+                        calcularFactura()
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+
+            } else {
+                alert(id)
+            }
+        }
+
     } else {
         alert("ERRO AL CALCULAR NUEVO PRECIO")
     }
