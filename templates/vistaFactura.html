@@ -100,9 +100,18 @@
                 <div class="card text-white  mb-0" style="max-width: 100rem;">
                     <div class="card-header text-success">
                         <h5 class="card-title   mb-1" align="center">DETALLE</h5>
-                        <input name="buscarPro" id='buscarPro' onkeyup="cargarBusquedaProLista()" class="form-control"
-                            type="text" placeholder="Buscar Producto, Ingresar Id, Nombre o Codigo"
-                            aria-label="Buscar, Ingresar Cedula">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 83%"><input name="buscarPro" id='buscarPro' onkeyup="cargarBusquedaProLista()" class="form-control"
+                                        type="text" placeholder="Buscar Producto, Ingresar Id, Nombre o Codigo"
+                                        aria-label="Buscar, Ingresar Cedula"></th>
+                                    <th><input name="buscarQR" id='buscarProQR' onkeypress="cargarBusquedaProQR(event,this)" class="form-control"
+                                        type="text" placeholder="Buscar por codigo QR"></th>
+                                </tr>
+                            </thead>
+                        </table>
+                        
                     </div>
                     <div class="card-body">
                         <div class="container">
@@ -296,4 +305,6 @@
 
     </div>
 </div>
+<div hidden id="qrcode" style="width:150px; height:150px; margin-top:15px;" title="http://jindo.dev.naver.com/collie"><canvas width="100" height="100" style="display: none;"></canvas><img style="display: block;"></div>
+                
 {% endblock %}

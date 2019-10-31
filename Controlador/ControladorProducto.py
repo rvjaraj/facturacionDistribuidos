@@ -89,6 +89,14 @@ class ControladorProducto:
         cur.close()
         return data[0]
 
+    def buscarProductoCodigo(self, id):
+        cur = db.cursor()
+        curg.execute(
+            'SELECT * FROM producto WHERE eliminado <> 1 and codigo = %s', (id))
+        data = curg.fetchall()
+        cur.close()
+        return data[0]
+
 
 if __name__ == "__main__":
     pro = Producto(0, "nombre", "precio", 'stock', "codigo", "descuento", False)

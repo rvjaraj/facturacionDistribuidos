@@ -154,6 +154,14 @@ def buscarProductoId():
         data = con.buscarProducto(txt)
         return json.dumps(data)
 
+@app.route("/buscarProductoCodigo", methods=['POST'])
+def buscarProductoCodigo():
+    if request.method == 'POST':
+        txt = request.form['codigo']
+        con = ControladorProducto()
+        data = con.buscarProductoCodigo(txt)
+        return json.dumps(data)
+
 
 @app.route('/actualizarProducto', methods=['POST'])
 def actualizarProducto():

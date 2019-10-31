@@ -414,7 +414,13 @@ function validarDecimalesF(element, id) {
         }
 
     } else {
-        alert("ERRO AL CALCULAR NUEVO PRECIO")
+        $.toast({
+            title: 'DESCUENTO',
+            subtitle: '',
+            content: 'ERROR CALCULAR DESCUENTO',
+            type: 'error',
+            delay: 9000
+        });
     }
 }
 
