@@ -1,7 +1,7 @@
 from flask_mysqldb import MySQL
 import pymysql
 db = pymysql.connect("localhost", "root", "", "facturaciondistribuidos")
-curg = db.cursor()
+
  
 
 class Producto:
@@ -64,8 +64,9 @@ class ControladorProducto:
         return data
 
     def listarBusca(self, cedula):
-        curg.execute("SELECT * FROM producto WHERE eliminado <> 1 and id =  %s  or eliminado <> 1 and nombre like %s  or eliminado <> 1 and codigo like %s", (cedula, '%'+cedula+'%', '%'+cedula+'%')  )
-        data = curg.fetchall()
+        cur = db.cursor()
+        cur.execute("SELECT * FROM producto WHERE eliminado <> 1 and id =  %s  or eliminado <> 1 and nombre like %s  or eliminado <> 1 and codigo like %s", (cedula, '%'+cedula+'%', '%'+cedula+'%')  )
+        data = cur.fetchall()
         
         return data
 
@@ -83,17 +84,17 @@ class ControladorProducto:
 
     def buscarProducto(self, id):
         cur = db.cursor()
-        curg.execute(
+        cur.execute(
             'SELECT * FROM producto WHERE eliminado <> 1 and id = %s', (id))
-        data = curg.fetchall()
+        data = cur.fetchall()
         cur.close()
         return data[0]
 
     def buscarProductoCodigo(self, id):
         cur = db.cursor()
-        curg.execute(
+        cur.execute(
             'SELECT * FROM producto WHERE eliminado <> 1 and codigo = %s', (id))
-        data = curg.fetchall()
+        data = cur.fetchall()
         cur.close()
         return data[0]
 

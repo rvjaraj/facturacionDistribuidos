@@ -424,7 +424,7 @@ function validarCantidaStock() {
                     '<td>' + codigo + '</td>' +
                     '<td>' + cant + '</td>' +
                     '<td>' + nombre + '</td>' +
-                    '<td><input value=\'' + response[5] + '\' class="form-control"  style="width: 85px;" type="number" step="0.01" id="descuento" name="descuento" onkeydown="return soloDecimales(event, this)"  onkeyup="validarDecimalesF(this,' + id + ')"></td>' +
+                    '<td><input  id=\'' + id + 'xx\' value=\'' + response[5] + '\' class="form-control"  style="width: 85px;" type="number" step="0.01" id="descuento" name="descuento" onkeydown="return soloDecimales(event, this)"  onkeyup="validarDecimalesF(this,' + id + ')"></td>' +
                     '<td>' + totalIva + '</td>' +
                     '<td>' + precioConDescuento + '</td>' +
                     '<td>' + precioTotalDetalle + '</td></tr>';
@@ -486,7 +486,6 @@ function guardarFactura() {
     idCliente = $('#idU').val()
     if (idCliente != "") {
         if (table.rows.length >= 2) {
-            console.log(idCliente)
             fecha = $('#fecha').html()
             total = $("#total").html()
             iva = $("#iva").html()
@@ -503,6 +502,7 @@ function guardarFactura() {
                 type: 'POST',
                 dataType: 'json',
                 success: function(response) {
+
                     if (response != "") {
                         var table = document.getElementById("tablaDetalle");
                         for (var i = 1; i < table.rows.length; i++) {
@@ -511,12 +511,18 @@ function guardarFactura() {
                                 res = table.rows[i].cells[j].innerHTML;
                                 row[j] = res
                             }
+                            ele = row[4].substr(row[4].search("id"), 7)
+                            ele = ele.split("\"")
+                            ele = ele[1].replace("x", "")
                             $.ajax({
                                 url: "/addDetalle",
                                 data: {
                                     "producto": row[0],
                                     "cantidad": row[2],
-                                    "subtotal": row[5],
+                                    "subtotal": row[7],
+                                    "descuento": $("#" + ele + "xx").val(),
+                                    "iva": row[5],
+                                    "precio": row[6],
                                     "factura": response[0][0]
                                 },
                                 type: 'POST',
@@ -532,6 +538,7 @@ function guardarFactura() {
 
                         }
                         alert("FACTURA INGRESADA")
+                            //generarPdf()
                         location.reload();
                     } else {
                         console.log("errorr ");

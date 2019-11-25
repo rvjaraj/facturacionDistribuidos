@@ -64,7 +64,7 @@ class ControladorFactura:
 
     def listar(self):
         cur = db.cursor()
-        cur.execute('SELECT * FROM factura where eliminado <> 1')
+        cur.execute('SELECT * FROM factura f, usuarios u WHERE f.eliminado <> 1 and u.id = f.Usuarios  ')
         data = cur.fetchall()
         cur.close()
         return data

@@ -1,6 +1,6 @@
 from flask_mysqldb import MySQL
 import pymysql
-db = pymysql.connect("localhost", "root", "", "facturaciondistribuidos")
+
 
 
 class Usuario:
@@ -22,14 +22,17 @@ class Usuario:
 
 
 class ControladorUsuario:
+  
+    def __init__(self, db):
+        self.db = db
 
     def ingresar(self, Usuario):
         try:
             usr = Usuario
-            cur = db.cursor()
+            cur = self.db.cursor()
             cur.execute('INSERT INTO usuarios (cedula, nombre, apellido, telefono, direccion, correo, fechaNacimiento, eliminado) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',
                         (usr.cedula, usr.nombre, usr.apellido, usr.telefono, usr.direccion, usr.correo, usr.fechaNac, usr.eliminado))
-            db.commit()
+            self.db.commit()
             cur.close()
             return True
         except Exception as e:
@@ -39,7 +42,7 @@ class ControladorUsuario:
     def actualizar(self, Usuario):
         try:
             usr = Usuario
-            cur = db.cursor()
+            cur = self.db.cursor()
             cur.execute("""
                 UPDATE usuarios
                 SET cedula = %s,
@@ -52,7 +55,7 @@ class ControladorUsuario:
                     eliminado = %s
                 WHERE id = %s
             """, (usr.cedula, usr.nombre, usr.apellido, usr.telefono, usr.direccion, usr.correo, usr.fechaNac, usr.eliminado, usr.id))
-            db.commit()
+            self.db.commit()
             cur.close()
             return True
         except Exception as e:
@@ -60,14 +63,14 @@ class ControladorUsuario:
             return False   
 
     def listar(self):
-        cur = db.cursor()
+        cur = self.db.cursor()
         cur.execute('SELECT * FROM usuarios where eliminado <> 1')
         data = cur.fetchall()
         cur.close()
         return data
     
     def listarBusca(self, cedula):
-        cur = db.cursor()
+        cur = self.db.cursor()
         cur.execute("SELECT * FROM usuarios WHERE eliminado <> 1 and cedula like %s  or eliminado <> 1 and nombre like %s  or eliminado <> 1 and apellido like %s", ('%'+cedula+'%', '%'+cedula+'%', '%'+cedula+'%')  )
         data = cur.fetchall()
         cur.close()
@@ -76,10 +79,10 @@ class ControladorUsuario:
 
     def eliminar(self, id):
         try:
-            cur = db.cursor()
+            cur = self.db.cursor()
             cur.execute(
                 'UPDATE `usuarios` SET `eliminado` = 1 WHERE `usuarios`.`id` = ' + id)
-            db.commit()
+            self.db.commit()
             cur.close()
             return True
         except Exception as e:
@@ -87,7 +90,7 @@ class ControladorUsuario:
             return False
 
     def buscarUsuario(self, id):
-        cur = db.cursor()
+        cur = self.db.cursor()
         cur.execute('SELECT * FROM usuarios WHERE eliminado <> 1 and id = %s', (id))
         data = cur.fetchall()
         cur.close()
@@ -95,7 +98,7 @@ class ControladorUsuario:
         return data[0]
     
     def buscarCedula(self, cedula):
-        cur = db.cursor()
+        cur = self.db.cursor()
         cur.execute('SELECT * FROM usuarios WHERE eliminado <> 1 and cedula = %s', (cedula))
         data = cur.fetchall()
         cur.close()
@@ -106,10 +109,3 @@ class ControladorUsuario:
             return data[0]
 
 
-if __name__ == "__main__":
-    usr = Usuario(0, "cedula", "nombre", "apellido", 'telefono',
-                  "direccion",  "correo", '10/10/1000', False)
-    print(usr.Imprimir())
-
-    con = ControladorUsuario()
-    con.listar()

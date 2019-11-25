@@ -7,7 +7,7 @@
                 <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">CREAR</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">LISTAR</a>
+                <a class="nav-link" onclick="cargarFacturasL()" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">LISTAR</a>
             </li>
         </ul>
 
@@ -20,7 +20,8 @@
                 <table>
                     <thead>
                         <tr>
-                            <th style="width: 100%"><input name="buscar" id='buscar' onkeyup="cargarDatosEnter(event)" onkeypress="cargarBusquedaLista()" class="form-control" type="text" placeholder="Buscar Cliente, Ingresar Cedula, Nombre o Apellido"></th>
+                            <th style="width: 100%">
+                                <input name="buscar" id='buscar' onkeyup="cargarDatosEnter(event)" onkeypress="cargarBusquedaLista()" class="form-control" type="text" placeholder="Buscar Cliente, Ingresar Cedula, Nombre o Apellido" value="0105452171"></th>
                             <th><button type="button" class="btn btn-outline-danger" onclick="window.location.href='/vistaFactura'">X</button></th>
                         </tr>
                     </thead>
@@ -103,15 +104,17 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th style="width: 83%"><input name="buscarPro" id='buscarPro' onkeyup="cargarBusquedaProLista()" class="form-control"
-                                        type="text" placeholder="Buscar Producto, Ingresar Id, Nombre o Codigo"
-                                        aria-label="Buscar, Ingresar Cedula"></th>
-                                    <th><input name="buscarQR" id='buscarProQR' onkeypress="cargarBusquedaProQR(event,this)" class="form-control"
-                                        type="text" placeholder="Buscar por codigo QR"></th>
+                                    <th style="width: 83%"><input name="buscarPro" id='buscarPro'
+                                            onkeyup="cargarBusquedaProLista()" class="form-control" type="text"
+                                            placeholder="Buscar Producto, Ingresar Id, Nombre o Codigo"
+                                            aria-label="Buscar, Ingresar Cedula"></th>
+                                    <th><input name="buscarQR" id='buscarProQR' value="holahola"
+                                            onkeypress="cargarBusquedaProQR(event,this)" class="form-control"
+                                            type="text" placeholder="Buscar por codigo QR"></th>
                                 </tr>
                             </thead>
                         </table>
-                        
+
                     </div>
                     <div class="card-body">
                         <div class="container">
@@ -172,39 +175,41 @@
                     </div>
 
                 </div>
+            </div>
                 <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                     <table class="table table-striped table-dark table-sm">
                         <thead>
                             <tr>
-                                <td>Cedula</td>
-                                <td>Nombres</td>
-                                <td>Apellidos</td>
-                                <td>Teléfono</td>
-                                <td>Dirección</td>
-                                <td>Correo electrónico</td>
-                                <td>Fecha de Nacimiento</td>
-                                <td>Opciones</td>
+                                <td>ID</td>
+                                <td>FECHA</td>
+                                <td>CEDULA CLIENTE</td>
+                                <td>CLIENTE</td>
+                                <td>IVA</td>
+                                <td>SUBTOTAL</td>
+                                <td>TOTAL</td>
+                                <td>VER DETALLE</td>
                             </tr>
                         </thead>
                         <tbody id='filas'>
-                            {% for usr in usuaarios %}
-                            <t-r>
-                                <td>{{usr.1}} </td>
-                                <td>{{usr.2}}</td>
-                                <td>{{usr.3}}</td>
-                                <td>{{usr.4}}</td>
-                                <td>{{usr.5}}</td>
-                                <td>{{usr.6}}</td>
-                                <td>{{usr.7}}</td>
-                                <td>
-                                    <a class="btn btn-secondary" data-toggle="modal"
-                                        onclick="cargarDatosCLiente('{{usr.0}}')"
-                                        data-target="#exampleModalLong">EDITAR</a>
-                                    <a href="/eliminar/{{usr.0}}" onclick="confirmarEliminacion('USUARIO',event)"
-                                        class="btn btn-danger btn-delete">ELIMINAR</a>
-                                </td>
-                                </tr>
-                                {% endfor %}
+                            
+                        </tbody>
+                    </table>
+                </div><br>
+                <h5 class="card-title   mb-1" align="center">DETALLE</h5>
+                    <table class="table table-striped  table-sm">
+                        <thead>
+                            <tr>
+                                <td>ID</td>
+                                <td>CANTIDAD</td>
+                                <td>PRODUCTO</td>
+                                <td>DESCUENTO</td>
+                                <td>IVA</td>
+                                <td>PRECIO</td>
+                                <td>TOTAL</td>
+                            </tr>
+                        </thead>
+                        <tbody id='filasDetalle'>
+                            
                         </tbody>
                     </table>
                 </div>
@@ -305,6 +310,7 @@
 
     </div>
 </div>
-<div hidden id="qrcode" style="width:150px; height:150px; margin-top:15px;" title="http://jindo.dev.naver.com/collie"><canvas width="100" height="100" style="display: none;"></canvas><img style="display: block;"></div>
-                
+<div hidden id="qrcode" style="width:150px; height:150px; margin-top:15px;" title="http://jindo.dev.naver.com/collie">
+    <canvas width="100" height="100" style="display: none;"></canvas><img style="display: block;"></div>
+
 {% endblock %}

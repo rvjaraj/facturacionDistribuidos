@@ -5,6 +5,8 @@ from Controlador.ControladorProducto import Producto, ControladorProducto
 from Controlador.ControladorFactura import Factura, ControladorFactura
 from Controlador.ControladorDetalle import Detalle, ControladorDetalle
 import json
+import pymysql
+db = pymysql.connect("localhost", "root", "", "facturaciondistribuidos")
 app = Flask(__name__)
 
 # MENSAJES
@@ -16,7 +18,7 @@ def Index():
 
 @app.route("/vistaCliente")
 def vistaCliente():
-    con = ControladorUsuario()
+    con = ControladorUsuario(db)
     data = con.listar()
     return render_template("vistaCliente.html", usuaarios=data)
 
@@ -25,7 +27,7 @@ def vistaCliente():
 def buscaClientes():
     if request.method == 'POST':
         cedula = request.form['cedula']
-        con = ControladorUsuario()
+        con = ControladorUsuario(db)
         data = con.listarBusca(cedula)
         return json.dumps(data)
 
@@ -34,7 +36,7 @@ def buscaClientes():
 def buscaCliente():
     if request.method == 'POST':
         id = request.form['idd']
-        con = ControladorUsuario()
+        con = ControladorUsuario(db)
         data = con.buscarUsuario(id)
         return json.dumps(data)
 
@@ -154,6 +156,7 @@ def buscarProductoId():
         data = con.buscarProducto(txt)
         return json.dumps(data)
 
+
 @app.route("/buscarProductoCodigo", methods=['POST'])
 def buscarProductoCodigo():
     if request.method == 'POST':
@@ -180,7 +183,7 @@ def actualizarProducto():
             flash('ERROR AL ACTUALIZADO PRODUCTO')
         return redirect(url_for('vistaProductos'))
 
-#Controlador Factura
+# Controlador Factura
 @app.route("/vistaFactura")
 def vistaFactura():
     return render_template("vistaFactura.html")
@@ -188,7 +191,7 @@ def vistaFactura():
 
 @app.route("/addFactura", methods=['POST'])
 def addFactura():
-     if request.method == 'POST':
+    if request.method == 'POST':
         id = 0
         usuario = request.form['cliente']
         fecha = request.form['fecha']
@@ -197,7 +200,8 @@ def addFactura():
         subtotal = request.form['subtotal']
         descuento = 0
         eliminado = 0
-        fac = Factura(id, subtotal, iva, total, fecha, descuento, usuario, eliminado)
+        fac = Factura(id, subtotal, iva, total, fecha,
+                      descuento, usuario, eliminado)
         con = ControladorFactura()
         if(con.ingresar(fac)):
             res = con.ultimaFactura()
@@ -206,22 +210,28 @@ def addFactura():
             return json.dumps("")
             #flash('ERROR AL ACTUALIZADO PRODUCTO')
 
+
 @app.route("/addDetalle", methods=['POST'])
 def addDetalle():
-     if request.method == 'POST':
+    if request.method == 'POST':
         id = 0
         producto = request.form['producto']
         cantidad = request.form['cantidad']
         subtotal = request.form['subtotal']
         factura = request.form['factura']
+        iva = request.form['iva']
+        descuento = request.form['descuento']
+        precio = request.form['precio']
 
-        det = Detalle(id, cantidad, subtotal, producto, factura)
+        det = Detalle(id, cantidad, subtotal, producto,
+                      factura, iva, descuento, precio)
         con = ControladorDetalle()
         if(con.ingresar(det)):
-            
+
             return json.dumps("true")
         else:
-            return json.dumps("")     
+            return json.dumps("")
+
 
 @app.route("/buscarCedula", methods=['POST'])
 def buscarProductoCedula():
@@ -230,6 +240,7 @@ def buscarProductoCedula():
         con = ControladorUsuario()
         data = con.buscarCedula(txt)
         return json.dumps(data)
+
 
 @app.route("/addFactruaUsuario", methods=['POST'])
 def addFactruaUsuario():
@@ -252,11 +263,33 @@ def addFactruaUsuario():
             flash('ERROR AL AGREGAR USUARIO')
             return json.dumps("false")
 
+
+@app.route("/cargarFacturasL")
+def cargarFacturasL():
+        con = ControladorFactura()
+        data = con.listar()
+        return json.dumps(data)
+
+
+@app.route("/cargarDetalleFactur", methods=['POST'])
+def cargarDetalleFactur():
+    if request.method == 'POST':
+        id = request.form['id']
+        con = ControladorDetalle()
+        data = con.listar(id)
+        return json.dumps(data)
+
+
+@app.route("/hola")
+def hola():
+    return render_template("hola.html")
+
+
 if __name__ == '__main__':
     app.debug = True
-    app.run(host='localhost', port=5001)
+    app.run(host='192.168.1.50', port=5001)
 
 # modal
 # dat
 # toast
-#owerflow x y 
+# owerflow x y
