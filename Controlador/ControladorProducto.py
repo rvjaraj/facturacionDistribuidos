@@ -1,4 +1,3 @@
-from flask_mysqldb import MySQL
 import pymysql
 db = pymysql.connect("localhost", "root", "", "facturaciondistribuidos")
 
@@ -14,6 +13,8 @@ class Producto:
         self.descuento = descuento
         self.eliminado = eliminado
 
+
+
     def Imprimir(self):
         mensaje = ('Producto: \n id = ' + str(self.id) + '\n nombre = ' + self.nombre + '\n precio = ' + self.precio
                    + '\n stock = ' + self.stock + '\n descuento = ' + self.descuento+'\n codigo = ' + self.codigo)
@@ -21,14 +22,16 @@ class Producto:
 
 
 class ControladorProducto:
+    def __init__(self, db):
+            self.db = db
 
     def ingresar(self, Producto):
         try:
             pro = Producto
-            cur = db.cursor()
+            cur = self.db.cursor()
             cur.execute('INSERT INTO producto (nombre, precio, stock, codigo, descuento, eliminado) VALUES (%s, %s, %s, %s, %s, %s)',
                         (pro.nombre,  pro.precio, pro.stock, pro.codigo, pro.descuento, pro.eliminado))
-            db.commit()
+            self.db.commit()
             cur.close()
             return True
         except Exception as e:
@@ -38,7 +41,7 @@ class ControladorProducto:
     def actualizar(self, Producto):
         try:
             pro = Producto
-            cur = db.cursor()
+            cur = self.db.cursor()
             cur.execute("""
                 UPDATE producto
                 SET nombre = %s,
@@ -49,7 +52,7 @@ class ControladorProducto:
                     eliminado = %s
                 WHERE id = %s
             """, (pro.nombre, pro.precio, pro.stock, pro.codigo,pro.descuento, pro.eliminado, pro.id))
-            db.commit()
+            self.db.commit()
             cur.close()
             return True
         except Exception as e:
@@ -57,7 +60,7 @@ class ControladorProducto:
             return False
 
     def listar(self):
-        cur = db.cursor()
+        cur = self.db.cursor()
         cur.execute('SELECT * FROM producto where eliminado <> 1')
         data = cur.fetchall()
         cur.close()
@@ -72,10 +75,10 @@ class ControladorProducto:
 
     def eliminar(self, id):
         try:
-            cur = db.cursor()
+            cur = self.db.cursor()
             cur.execute(
                 'UPDATE `producto` SET `eliminado` = 1 WHERE `producto`.`id` = ' + id)
-            db.commit()
+            self.db.commit()
             cur.close()
             return True
         except Exception as e:
@@ -83,7 +86,7 @@ class ControladorProducto:
             return False
 
     def buscarProducto(self, id):
-        cur = db.cursor()
+        cur = self.db.cursor()
         cur.execute(
             'SELECT * FROM producto WHERE eliminado <> 1 and id = %s', (id))
         data = cur.fetchall()
@@ -91,7 +94,7 @@ class ControladorProducto:
         return data[0]
 
     def buscarProductoCodigo(self, id):
-        cur = db.cursor()
+        cur = self.db.cursor()
         cur.execute(
             'SELECT * FROM producto WHERE eliminado <> 1 and codigo = %s', (id))
         data = cur.fetchall()

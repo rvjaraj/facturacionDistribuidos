@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_mysqldb import MySQL
 from Controlador.ControladorUsuario import Usuario, ControladorUsuario
 from Controlador.ControladorProducto import Producto, ControladorProducto
 from Controlador.ControladorFactura import Factura, ControladorFactura
@@ -55,7 +54,7 @@ def vistaUsuario():
         eliminado = "0"
         usr = Usuario(id, cedula, nombre, apellido, telefono,
                       direccion,  correo, fechaNac, eliminado)
-        con = ControladorUsuario()
+        con = ControladorUsuario(db)
         if(con.ingresar(usr)):
             flash('USUARIO AGREGADO EXITOSAMENTE')
         else:
@@ -65,7 +64,7 @@ def vistaUsuario():
 
 @app.route('/eliminar/<string:id>')
 def eliminarUsuario(id):
-    con = ControladorUsuario()
+    con = ControladorUsuario(db)
     if(con.eliminar(id)):
         flash('USUARIO ELIMINADO EXITOSAMENTE')
     else:
@@ -75,7 +74,7 @@ def eliminarUsuario(id):
 
 @app.route('/editar/<id>', methods=['POST', 'GET'])
 def getUsuario(id):
-    con = ControladorUsuario()
+    con = ControladorUsuario(db)
     data = con.buscarUsuario(id)
     return render_template('editCliente.html', usr=data)
 
@@ -94,7 +93,7 @@ def actualizarUsuario():
         eliminado = "0"
         usr = Usuario(idd, cedula, nombre, apellido, telefono,
                       direccion,  correo, fechaNac, eliminado)
-        con = ControladorUsuario()
+        con = ControladorUsuario(db)
         if(con.actualizar(usr)):
             flash('USUARIO ACTUALIZADO EXITOSAMENTE')
             return json.dumps('true')
@@ -105,7 +104,7 @@ def actualizarUsuario():
 # productossssss
 @app.route("/vistaProductos")
 def vistaProductos():
-    con = ControladorProducto()
+    con = ControladorProducto(db)
     data = con.listar()
     return render_template("vistaProducto.html", productos=data)
 
@@ -120,7 +119,7 @@ def addProducto():
         stock = request.form['stock']
         descuento = request.form['descuento']
         pro = Producto(id, nombre, precio, stock, codigo, descuento, "0")
-        con = ControladorProducto()
+        con = ControladorProducto(db)
         if(con.ingresar(pro)):
             flash('PRODUCTO AGREGADO EXITOSAMENTE')
         else:
@@ -130,7 +129,7 @@ def addProducto():
 
 @app.route('/eliminarProducto/<string:id>')
 def eliminarProducto(id):
-    con = ControladorProducto()
+    con = ControladorProducto(db)
     if(con.eliminar(id)):
         flash('PRODUCTO ELIMINADO EXITOSAMENTE')
     else:
@@ -142,7 +141,7 @@ def eliminarProducto(id):
 def buscarProducto():
     if request.method == 'POST':
         txt = request.form['dat']
-        con = ControladorProducto()
+        con = ControladorProducto(db)
         data = con.listarBusca(txt)
         print(data)
         return json.dumps(data)
@@ -152,7 +151,7 @@ def buscarProducto():
 def buscarProductoId():
     if request.method == 'POST':
         txt = request.form['id']
-        con = ControladorProducto()
+        con = ControladorProducto(db)
         data = con.buscarProducto(txt)
         return json.dumps(data)
 
@@ -161,7 +160,7 @@ def buscarProductoId():
 def buscarProductoCodigo():
     if request.method == 'POST':
         txt = request.form['codigo']
-        con = ControladorProducto()
+        con = ControladorProducto(db)
         data = con.buscarProductoCodigo(txt)
         return json.dumps(data)
 
@@ -176,7 +175,7 @@ def actualizarProducto():
         stock = request.form['stockE']
         descuento = request.form['descuentoE']
         pro = Producto(idd, nombre, precio, stock, codigo, descuento, "0")
-        con = ControladorProducto()
+        con = ControladorProducto(db)
         if(con.actualizar(pro)):
             flash('PRODUCTO ACTUALIZADO EXITOSAMENTE')
         else:
@@ -202,7 +201,7 @@ def addFactura():
         eliminado = 0
         fac = Factura(id, subtotal, iva, total, fecha,
                       descuento, usuario, eliminado)
-        con = ControladorFactura()
+        con = ControladorFactura(db)
         if(con.ingresar(fac)):
             res = con.ultimaFactura()
             return json.dumps(res)
@@ -225,7 +224,7 @@ def addDetalle():
 
         det = Detalle(id, cantidad, subtotal, producto,
                       factura, iva, descuento, precio)
-        con = ControladorDetalle()
+        con = ControladorDetalle(db)
         if(con.ingresar(det)):
 
             return json.dumps("true")
@@ -237,7 +236,7 @@ def addDetalle():
 def buscarProductoCedula():
     if request.method == 'POST':
         txt = request.form['cedula']
-        con = ControladorUsuario()
+        con = ControladorUsuario(db)
         data = con.buscarCedula(txt)
         return json.dumps(data)
 
@@ -256,7 +255,7 @@ def addFactruaUsuario():
         eliminado = "0"
         usr = Usuario(id, cedula, nombre, apellido, telefono,
                       direccion,  correo, fechaNac, eliminado)
-        con = ControladorUsuario()
+        con = ControladorUsuario(db)
         if(con.ingresar(usr)):
             return json.dumps("true")
         else:
@@ -266,7 +265,7 @@ def addFactruaUsuario():
 
 @app.route("/cargarFacturasL")
 def cargarFacturasL():
-        con = ControladorFactura()
+        con = ControladorFactura(db)
         data = con.listar()
         return json.dumps(data)
 
@@ -275,15 +274,14 @@ def cargarFacturasL():
 def cargarDetalleFactur():
     if request.method == 'POST':
         id = request.form['id']
-        con = ControladorDetalle()
+        con = ControladorDetalle(db)
         data = con.listar(id)
         return json.dumps(data)
 
 
 @app.route("/hola")
 def hola():
-    return render_template("hola.html")
-
+    return "hola"
 
 if __name__ == '__main__':
     app.debug = True

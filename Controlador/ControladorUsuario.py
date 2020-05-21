@@ -1,6 +1,5 @@
-from flask_mysqldb import MySQL
 import pymysql
-
+db = pymysql.connect("localhost", "root", "", "facturaciondistribuidos")
 
 
 class Usuario:

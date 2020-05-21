@@ -1,4 +1,3 @@
-from flask_mysqldb import MySQL
 import pymysql
 db = pymysql.connect("localhost", "root", "", "facturaciondistribuidos")
 
@@ -13,12 +12,12 @@ class Detalle:
         self.descuento = descuento
         self.precio = precio
 
-    def Imprimir(self):
-        pass
+
 
 
 class ControladorDetalle:
-
+    def __init__(self, db):
+        self.db = db
     
     
     def ingresar(self, Detalle):

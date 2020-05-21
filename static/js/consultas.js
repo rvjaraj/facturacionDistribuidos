@@ -329,7 +329,7 @@ function cargarBusquedaProLista() {
             }
         },
         error: function(error) {
-            console.log(error);
+            console.log(String(error));
         }
     });
 }

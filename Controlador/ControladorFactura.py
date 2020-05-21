@@ -1,4 +1,3 @@
-from flask_mysqldb import MySQL
 import pymysql
 db = pymysql.connect("localhost", "root", "", "facturaciondistribuidos")
 
@@ -14,11 +13,12 @@ class Factura:
         self.usuario = usuario
         self.eliminado = eliminado
 
-    def Imprimir(self):
-        pass
+
 
 
 class ControladorFactura:
+    def __init__(self, db):
+        self.db = db
 
     def ultimaFactura(self):
         cur = db.cursor()
